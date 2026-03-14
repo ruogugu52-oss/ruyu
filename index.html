@@ -14,7 +14,7 @@ body{font-family:'Noto Sans SC',sans-serif;min-height:100vh;color:var(--ink);ove
 .bg::after{content:'';position:absolute;inset:0;animation:bp 15s ease-in-out infinite alternate;background:radial-gradient(circle at 25% 18%,rgba(200,165,90,0.09) 0%,transparent 36%),radial-gradient(circle at 78% 72%,rgba(200,165,90,0.07) 0%,transparent 30%);}
 @keyframes bp{from{opacity:.5;transform:scale(1)}to{opacity:1;transform:scale(1.06)}}
 .gc{background:var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gl-b);box-shadow:var(--sh);}
-#auth{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
+#auth{position:fixed;inset:0;z-index:300;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
 .auth-box{width:400px;max-width:100%;border-radius:30px;padding:46px 38px 38px;animation:ri .65s cubic-bezier(.22,1,.36,1);}
 @keyframes ri{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
 .brand{text-align:center;margin-bottom:32px;}

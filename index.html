@@ -2,638 +2,438 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>如玉 · 公益婚恋</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>如玉社区</title>
 <style>
-:root{--jade:#4a9b82;--jade-l:#7dc4ad;--jade-d:#276650;--jade-glow:rgba(74,155,130,0.38);--jade-s:rgba(74,155,130,0.10);--gold:#c8a55a;--gold-l:rgba(200,165,90,0.20);--ink:#16203a;--ink-s:rgba(22,32,58,0.55);--ink-f:rgba(22,32,58,0.25);--gl:rgba(255,255,255,0.22);--gl-b:rgba(255,255,255,0.38);--gl-card:rgba(255,255,255,0.26);--blur:saturate(160%) blur(20px);--sh:0 4px 24px rgba(22,32,58,0.08),0 1px 0 rgba(255,255,255,0.5) inset;--sh-lg:0 16px 48px rgba(22,32,58,0.14),0 1px 0 rgba(255,255,255,0.45) inset;--r:18px;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;}
-body{font-family:'Noto Sans SC',sans-serif;color:var(--ink);background:#b8d4ca;}
-.bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 90% 70% at 10% 0%,#a4d4c2 0%,transparent 55%),radial-gradient(ellipse 70% 80% at 90% 90%,#a0ccbe 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 50% 30%,#bce0d4 0%,transparent 55%),linear-gradient(150deg,#c8e4da 0%,#b2cec5 50%,#a4c8bc 100%);}
-.bg::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 15%,rgba(200,165,90,0.08) 0%,transparent 35%),radial-gradient(circle at 80% 75%,rgba(200,165,90,0.06) 0%,transparent 30%);animation:bgp 16s ease-in-out infinite alternate;}
-@keyframes bgp{from{opacity:.5}to{opacity:1}}
-.gc{background:var(--gl-card);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gl-b);box-shadow:var(--sh);}
-#auth{position:fixed;inset:0;z-index:300;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.auth-wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 20px;}
-.auth-box{width:380px;max-width:100%;border-radius:28px;padding:36px 28px 28px;animation:ri .6s cubic-bezier(.22,1,.36,1);}
-@keyframes ri{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
-.brand{text-align:center;margin-bottom:26px;}
-.brand-orb{width:60px;height:60px;border-radius:50%;margin:0 auto 12px;background:linear-gradient(145deg,#8ecabb,#2d7a62);box-shadow:0 0 0 10px rgba(74,155,130,.10),0 0 38px var(--jade-glow);display:flex;align-items:center;justify-content:center;font-size:26px;animation:orb 5s ease-in-out infinite;}
-@keyframes orb{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.brand h1{font-family:'Noto Serif SC',serif;font-size:28px;font-weight:600;color:var(--jade-d);letter-spacing:7px;}
-.brand p{font-size:11px;color:var(--ink-s);margin-top:4px;letter-spacing:3px;}
-.brand-badge{display:inline-block;margin-top:8px;padding:3px 12px;border-radius:20px;font-size:11px;letter-spacing:2px;background:var(--gold-l);border:1px solid rgba(200,165,90,.35);color:var(--gold);}
-.atabs{display:flex;background:rgba(255,255,255,.20);border:1px solid var(--gl-b);border-radius:14px;padding:3px;margin-bottom:20px;}
-.atab{flex:1;padding:9px;border:none;background:transparent;border-radius:11px;font-family:inherit;font-size:14px;cursor:pointer;color:var(--ink-s);transition:all .22s;letter-spacing:2px;}
-.atab.on{background:rgba(255,255,255,.72);color:var(--jade-d);font-weight:500;}
-.aform{display:flex;flex-direction:column;gap:12px;}
-.fg{display:flex;flex-direction:column;gap:4px;}
-.fg label{font-size:12px;color:var(--ink-s);letter-spacing:.5px;}
-.fi{padding:11px 14px;border:1px solid rgba(255,255,255,.48);border-radius:12px;background:rgba(255,255,255,.33);font-size:14px;font-family:inherit;color:var(--ink);outline:none;transition:all .2s;}
-.fi:focus{border-color:var(--jade-l);background:rgba(255,255,255,.52);}
-.fi::placeholder{color:var(--ink-f);}
-.ferr{font-size:12px;color:#b03030;min-height:14px;margin-top:-5px;}
-.grow{display:flex;gap:10px;}
-.gb{flex:1;padding:10px;border:1px solid rgba(255,255,255,.42);border-radius:12px;background:rgba(255,255,255,.22);cursor:pointer;font-size:13px;font-family:inherit;color:var(--ink-s);transition:all .2s;}
-.gb.on{border-color:var(--jade-l);background:rgba(74,155,130,.12);color:var(--jade-d);font-weight:500;}
-.btn-m{padding:13px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--jade),var(--jade-d));color:#fff;font-family:inherit;font-size:15px;font-weight:500;letter-spacing:3px;cursor:pointer;box-shadow:0 6px 22px var(--jade-glow);transition:all .2s;}
-.btn-m:active{transform:scale(.98);}
-.alink{text-align:center;font-size:12px;color:var(--ink-s);cursor:pointer;}
-.alink:hover{color:var(--jade);}
-#app{display:none;position:fixed;inset:0;z-index:1;flex-direction:column;}
-#app.on{display:flex;}
-.topbar{height:54px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(255,255,255,.18);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-bottom:1px solid rgba(255,255,255,.30);z-index:50;}
-.topbar-logo{font-family:'Noto Serif SC',serif;font-size:18px;color:var(--jade-d);letter-spacing:4px;}
-.topbar-logo em{font-style:normal;font-size:10px;color:var(--gold);letter-spacing:2px;margin-left:3px;}
-.topbar-r{display:flex;align-items:center;gap:9px;}
-.top-av{width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,.68);background:var(--jade-s);display:flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden;cursor:pointer;}
-.top-av img{width:100%;height:100%;object-fit:cover;}
-.btn-out{padding:5px 11px;border:1px solid rgba(255,255,255,.48);border-radius:8px;background:rgba(255,255,255,.26);font-family:inherit;font-size:12px;color:var(--ink-s);cursor:pointer;transition:all .2s;}
-.btn-out:hover{background:rgba(255,255,255,.52);color:var(--jade-d);}
-.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 76px;}
-.bot-nav{height:60px;flex-shrink:0;display:flex;align-items:center;background:rgba(255,255,255,.22);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-top:1px solid rgba(255,255,255,.32);padding-bottom:env(safe-area-inset-bottom);}
-.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:transparent;cursor:pointer;padding:6px 0;color:var(--ink-s);transition:all .2s;font-family:inherit;}
-.bn .bi{font-size:20px;transition:transform .2s;}
-.bn .bl{font-size:10px;letter-spacing:.5px;}
-.bn.on{color:var(--jade-d);}
-.bn.on .bi{transform:scale(1.15);}
-.page{display:none;animation:fu .26s ease;}
-.page.on{display:block;}
-@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.ph{text-align:center;padding:16px 0 12px;}
-.ph h2{font-family:'Noto Serif SC',serif;font-size:21px;font-weight:400;letter-spacing:4px;color:var(--jade-d);}
-.ph p{font-size:11px;color:var(--ink-s);margin-top:4px;letter-spacing:1px;}
-.composer{border-radius:var(--r);padding:15px;margin-bottom:14px;}
-.comp-top{display:flex;align-items:center;gap:9px;margin-bottom:11px;}
-.comp-nm{font-size:13px;color:var(--ink-s);}
-.comp-ta{width:100%;border:1px solid rgba(255,255,255,.48);border-radius:12px;padding:10px 13px;background:rgba(255,255,255,.33);font-size:14px;font-family:inherit;color:var(--ink);resize:none;outline:none;min-height:66px;transition:all .2s;}
-.comp-ta:focus{border-color:var(--jade-l);background:rgba(255,255,255,.5);}
-.comp-ta::placeholder{color:var(--ink-f);}
-#iprev{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.prev-i{position:relative;width:72px;height:72px;border-radius:9px;overflow:hidden;}
-.prev-i img{width:100%;height:100%;object-fit:cover;}
-.pdel{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(22,32,58,.55);color:#fff;border:none;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;}
-.comp-bot{display:flex;align-items:center;justify-content:space-between;margin-top:9px;}
-.btn-ic{padding:6px 11px;border:1px solid rgba(255,255,255,.45);border-radius:8px;background:rgba(255,255,255,.26);cursor:pointer;font-size:12px;color:var(--ink-s);font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:4px;}
-.btn-pub{padding:8px 18px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--jade),var(--jade-d));color:#fff;font-family:inherit;font-size:13px;font-weight:500;letter-spacing:2px;cursor:pointer;box-shadow:0 4px 14px var(--jade-glow);transition:all .2s;}
-.btn-pub:active{transform:scale(.97);}
-.post{border-radius:var(--r);padding:15px;margin-bottom:12px;}
-.post-hd{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
-.pav{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.68);background:var(--jade-s);display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;flex-shrink:0;}
-.pav img{width:100%;height:100%;object-fit:cover;}
-.pmeta{flex:1;}
-.pnm{font-weight:600;font-size:14px;}
-.pinfo{font-size:11px;color:var(--ink-s);margin-top:2px;display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
-.ptag{padding:1px 6px;border-radius:5px;font-size:10px;background:rgba(74,155,130,.10);color:var(--jade-d);border:1px solid rgba(74,155,130,.16);}
-.pbody{font-size:14px;line-height:1.82;white-space:pre-wrap;margin-bottom:10px;color:var(--ink);}
-.pimgs{display:grid;gap:4px;margin-bottom:10px;}
-.pimgs.one{grid-template-columns:1fr;}
-.pimgs.two{grid-template-columns:1fr 1fr;}
-.pimgs.three{grid-template-columns:1fr 1fr 1fr;}
-.pimgs img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .2s;}
-.pimgs img:active{transform:scale(.98);}
-.pacts{display:flex;gap:2px;padding-top:9px;border-top:1px solid rgba(255,255,255,.35);}
-.abtn{display:flex;align-items:center;gap:3px;padding:6px 8px;border:none;background:transparent;cursor:pointer;font-size:12px;color:var(--ink-s);border-radius:7px;font-family:inherit;transition:all .2s;flex:1;justify-content:center;}
-.abtn:active{background:rgba(255,255,255,.36);}
-.abtn.on{color:var(--jade);}
-.coms{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.35);display:none;}
-.coms.on{display:block;}
-.citem{display:flex;gap:7px;margin-bottom:7px;}
-.cav{width:26px;height:26px;border-radius:50%;background:var(--jade-s);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;overflow:hidden;border:1.5px solid rgba(255,255,255,.58);}
-.cav img{width:100%;height:100%;object-fit:cover;}
-.cbody{background:rgba(255,255,255,.26);border-radius:10px;padding:6px 10px;flex:1;border:1px solid rgba(255,255,255,.38);}
-.cnm{font-size:11px;font-weight:600;color:var(--jade-d);}
-.ctxt{font-size:13px;margin-top:1px;color:var(--ink);}
-.crow{display:flex;gap:6px;margin-top:8px;}
-.cinp{flex:1;padding:7px 12px;border:1px solid rgba(255,255,255,.45);border-radius:17px;font-family:inherit;font-size:13px;background:rgba(255,255,255,.26);outline:none;color:var(--ink);}
-.cinp::placeholder{color:var(--ink-f);}
-.btn-snd{padding:7px 14px;background:var(--jade);color:#fff;border:none;border-radius:17px;font-family:inherit;font-size:13px;cursor:pointer;}
-.filters{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
-.fchip{padding:5px 13px;border:1px solid rgba(255,255,255,.45);border-radius:16px;background:rgba(255,255,255,.22);font-family:inherit;font-size:12px;cursor:pointer;color:var(--ink-s);transition:all .2s;}
-.fchip.on{border-color:var(--jade-l);background:rgba(74,155,130,.11);color:var(--jade-d);}
-.ugrid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;}
-.ucard{border-radius:var(--r);padding:16px 11px;text-align:center;cursor:pointer;transition:all .22s;}
-.ucard:active{transform:scale(.97);}
-.ucav{width:58px;height:58px;border-radius:50%;margin:0 auto 8px;background:var(--jade-s);display:flex;align-items:center;justify-content:center;font-size:26px;border:2.5px solid rgba(255,255,255,.68);overflow:hidden;}
-.ucav img{width:100%;height:100%;object-fit:cover;}
-.ucnm{font-size:14px;font-weight:600;}
-.ucsub{font-size:11px;color:var(--ink-s);margin-top:2px;}
-.uctags{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-top:7px;}
-.utag{padding:2px 7px;border-radius:5px;font-size:10px;background:rgba(74,155,130,.10);color:var(--jade-d);border:1px solid rgba(74,155,130,.16);}
-.btn-flw{margin-top:9px;width:100%;padding:7px;border:1px solid var(--jade-l);border-radius:9px;background:transparent;color:var(--jade-d);font-family:inherit;font-size:12px;cursor:pointer;transition:all .2s;}
-.btn-flw.on{background:var(--jade);color:#fff;border-color:var(--jade);}
-.marry-card{border-radius:var(--r);padding:15px;margin-bottom:12px;}
-.marry-hd{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
-.marry-badge{padding:2px 9px;border-radius:9px;font-size:10px;letter-spacing:1px;background:var(--gold-l);border:1px solid rgba(200,165,90,.28);color:var(--gold);}
-.marry-body{font-size:14px;line-height:1.82;color:var(--ink);white-space:pre-wrap;}
-.marry-foot{margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,255,255,.32);display:flex;justify-content:space-between;align-items:center;}
-.marry-info{font-size:11px;color:var(--ink-s);}
-.prof-hero{border-radius:var(--r);padding:22px 18px;margin-bottom:12px;position:relative;overflow:hidden;color:#fff;background:linear-gradient(135deg,rgba(74,155,130,.52),rgba(38,100,78,.65));backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,.30);box-shadow:var(--sh-lg);}
-.prof-hero::before{content:'玉';position:absolute;right:-12px;bottom:-32px;font-family:'Noto Serif SC',serif;font-size:150px;opacity:.05;font-weight:700;color:#fff;}
-.prof-top{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
-.pav-wrap{width:74px;height:74px;border-radius:50%;border:2.5px solid rgba(255,255,255,.55);background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:34px;cursor:pointer;position:relative;overflow:hidden;flex-shrink:0;}
-.pav-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.pav-wrap:active::after{content:'📷';position:absolute;inset:0;background:rgba(22,32,58,.42);display:flex;align-items:center;justify-content:center;font-size:20px;border-radius:50%;}
-.pinfo h2{font-family:'Noto Serif SC',serif;font-size:19px;font-weight:400;letter-spacing:2px;}
-.pinfo p{opacity:.78;font-size:12px;margin-top:2px;}
-.pbadge{display:inline-block;margin-top:5px;padding:2px 9px;border-radius:11px;border:1px solid rgba(200,165,90,.52);background:rgba(200,165,90,.14);font-size:10px;color:rgba(255,235,150,1);letter-spacing:2px;}
-.pstats{display:flex;gap:0;border-top:1px solid rgba(255,255,255,.22);padding-top:13px;}
-.st{flex:1;text-align:center;border-right:1px solid rgba(255,255,255,.18);}
-.st:last-child{border-right:none;}
-.st-n{font-size:20px;font-weight:700;}
-.st-l{font-size:10px;opacity:.7;margin-top:1px;letter-spacing:1px;}
-.psec{border-radius:var(--r);padding:16px;margin-bottom:12px;}
-.stitle{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:400;color:var(--jade-d);margin-bottom:13px;letter-spacing:2px;display:flex;align-items:center;gap:6px;}
-.stitle::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(74,155,130,.22),transparent);}
-.eform{display:flex;flex-direction:column;gap:10px;}
-.erow{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.elb{font-size:11px;color:var(--ink-s);margin-bottom:3px;}
-.ein{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.48);border-radius:11px;background:rgba(255,255,255,.30);font-size:13px;font-family:inherit;color:var(--ink);outline:none;}
-.ein::placeholder{color:var(--ink-f);}
-.eta{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.48);border-radius:11px;background:rgba(255,255,255,.30);font-size:13px;font-family:inherit;color:var(--ink);outline:none;resize:none;min-height:64px;}
-.eta::placeholder{color:var(--ink-f);}
-.pwd-wrap{border-top:1px solid rgba(255,255,255,.28);padding-top:13px;margin-top:3px;}
-.pwd-title{font-size:12px;color:var(--ink-s);margin-bottom:9px;}
-.vis-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.26);}
-.vis-item:last-child{border-bottom:none;}
-.vis-av{width:36px;height:36px;border-radius:50%;background:var(--jade-s);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden;border:1.5px solid rgba(255,255,255,.55);}
-.vis-av img{width:100%;height:100%;object-fit:cover;}
-.vis-name{font-size:14px;font-weight:500;flex:1;}
-.vis-time{font-size:11px;color:var(--ink-s);}
-.empty{text-align:center;padding:36px 20px;color:var(--ink-s);}
-.eico{font-size:38px;margin-bottom:9px;opacity:.48;}
-#toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(48px);background:rgba(22,32,58,.88);backdrop-filter:blur(12px);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;transition:transform .26s ease;pointer-events:none;border:1px solid rgba(255,255,255,.11);}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,'PingFang SC','Noto Sans SC',sans-serif;}
+body{background:#fff5f8;}
+#root{position:fixed;inset:0;display:flex;flex-direction:column;}
+.pg{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .22s cubic-bezier(.22,1,.36,1);transform:translateX(28px);}
+.pg.on{opacity:1;pointer-events:all;transform:translateX(0);}
+.chat-top{flex-shrink:0;height:52px;display:flex;align-items:center;padding:0 16px;background:#fff;border-bottom:1px solid #ffe4ee;position:relative;}
+.ct-left{display:flex;align-items:center;gap:12px;}
+.ct-icon{width:32px;height:32px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.ct-title{position:absolute;left:50%;transform:translateX(-50%);font-size:16px;font-weight:600;color:#111;letter-spacing:.3px;white-space:nowrap;pointer-events:none;}
+.ct-right{display:flex;align-items:center;gap:4px;margin-left:auto;}
+.ct-star{font-size:22px;line-height:1;background:none;border:none;cursor:pointer;padding:4px;}
+.ct-city{font-size:15px;font-weight:600;color:#07c160;background:none;border:none;cursor:pointer;font-family:inherit;padding:5px 6px;}
+.chat-msgs{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 12px 10px;display:flex;flex-direction:column;gap:13px;background:#fff5f8;}
+.time-sep{text-align:center;font-size:11px;color:#c0a8b4;background:rgba(255,255,255,.65);border-radius:10px;padding:3px 12px;margin:0 auto;pointer-events:none;}
+.mrow{display:flex;gap:9px;align-items:flex-start;}
+.mrow.me{flex-direction:row-reverse;}
+.m-av{width:43px;height:43px;border-radius:50%;flex-shrink:0;overflow:hidden;cursor:pointer;border:2.5px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.13);background:#ffccd8;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.m-av img{width:100%;height:100%;object-fit:cover;}
+.m-col{max-width:74%;display:flex;flex-direction:column;gap:4px;}
+.mrow.me .m-col{align-items:flex-end;}
+.m-meta{font-size:11px;color:#c0a8b4;display:flex;align-items:center;gap:8px;padding:0 2px;}
+.mrow.me .m-meta{flex-direction:row-reverse;}
+.m-time{font-size:10px;color:#d8b0c0;}
+.bubble{display:inline-block;padding:10px 15px;border-radius:22px;font-size:15px;line-height:1.62;word-break:break-word;background:#ff6b9d;color:#fff;box-shadow:0 2px 8px rgba(255,107,157,.26);cursor:pointer;}
+.mrow.me .bubble{background:#5b9cf6;box-shadow:0 2px 8px rgba(91,156,246,.26);}
+.m-img{border-radius:14px;overflow:hidden;cursor:pointer;max-width:232px;box-shadow:0 2px 12px rgba(0,0,0,.13);}
+.m-img img{width:100%;display:block;}
+.coms{background:rgba(255,255,255,.85);border-radius:14px;padding:8px 12px;border:1px solid #ffc8d8;max-width:288px;margin-top:3px;display:none;}
+.coms.open{display:block;}
+.com-item{font-size:12px;color:#2a0814;padding:2px 0;line-height:1.5;}
+.com-name{color:#e02050;font-weight:600;}
+.com-add{display:flex;gap:6px;margin-top:7px;padding-top:7px;border-top:1px solid #ffc8d8;}
+.com-inp{flex:1;padding:5px 11px;border:1px solid #ffc8d8;border-radius:14px;background:#fff;font-family:inherit;font-size:12px;color:#2a0814;outline:none;}
+.com-inp::placeholder{color:#f0a8bc;}
+.com-btn{padding:5px 13px;background:#e02050;color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:12px;cursor:pointer;}
+.chat-bar{flex-shrink:0;padding:9px 12px 16px;background:#fff;border-top:1px solid #ffe4ee;display:flex;align-items:center;gap:8px;}
+.bar-cam{width:36px;height:36px;border-radius:50%;background:#f6f0f4;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px;color:#999;}
+.bar-inp{flex:1;padding:9px 16px;border:1.5px solid #ffdcea;border-radius:22px;background:#fff8fa;font-family:inherit;font-size:14px;color:#2a0814;outline:none;min-height:40px;max-height:80px;resize:none;line-height:1.4;}
+.bar-inp::placeholder{color:#ddaabc;}.bar-inp:focus{border-color:#ff6b9d;}
+.bar-join{padding:10px 20px;background:#ff6b9d;color:#fff;border:none;border-radius:22px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;box-shadow:0 3px 12px rgba(255,107,157,.36);transition:transform .13s;}
+.bar-join:active{transform:scale(.96);}
+.bar-send{width:40px;height:40px;border-radius:50%;background:#ff6b9d;color:#fff;border:none;display:none;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0;box-shadow:0 3px 12px rgba(255,107,157,.36);}
+.setup-top{flex-shrink:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fff;border-bottom:1px solid #ffe4ee;}
+.st-back{font-size:24px;color:#e02050;background:none;border:none;cursor:pointer;line-height:1;}
+.st-title{font-size:16px;font-weight:600;color:#111;}
+.st-save{font-size:15px;font-weight:600;color:#e02050;background:none;border:none;font-family:inherit;cursor:pointer;}
+.setup-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:22px 16px 44px;background:#fff5f8;}
+.av-pick{width:88px;height:88px;border-radius:50%;margin:0 auto 20px;background:#ffccd8;border:3px solid #fff;box-shadow:0 4px 18px rgba(255,107,157,.2);display:flex;align-items:center;justify-content:center;font-size:40px;cursor:pointer;overflow:hidden;position:relative;}
+.av-pick img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.av-pick:active::after{content:'📷';position:absolute;inset:0;background:rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;font-size:26px;border-radius:50%;}
+.form-card{background:#fff;border-radius:18px;padding:18px;margin-bottom:13px;box-shadow:0 2px 14px rgba(255,107,157,.06);}
+.fc-t{font-size:12px;font-weight:600;color:#e02050;margin-bottom:13px;letter-spacing:1px;}
+.ff{display:flex;flex-direction:column;gap:12px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.fl{font-size:12px;color:#c0a8b4;margin-bottom:3px;}
+.fi{width:100%;padding:10px 13px;border:1.5px solid #ffdcea;border-radius:12px;background:#fff8fa;font-size:14px;font-family:inherit;color:#2a0814;outline:none;}
+.fi:focus{border-color:#ff6b9d;}.fi::placeholder{color:#e8b0c4;}
+.fta{width:100%;padding:10px 13px;border:1.5px solid #ffdcea;border-radius:12px;background:#fff8fa;font-size:14px;font-family:inherit;color:#2a0814;outline:none;resize:none;min-height:70px;}
+.fta::placeholder{color:#e8b0c4;}
+.gbr{display:flex;gap:10px;}
+.gb{flex:1;padding:10px;border:1.5px solid #ffdcea;border-radius:12px;background:#fff8fa;cursor:pointer;font-size:14px;font-family:inherit;color:#c0a8b4;transition:all .15s;}
+.gb.on{border-color:#ff6b9d;background:#fff0f4;color:#e02050;font-weight:500;}
+.save-big{width:100%;padding:14px;border:none;border-radius:15px;background:#ff6b9d;color:#fff;font-family:inherit;font-size:15px;font-weight:500;letter-spacing:2px;cursor:pointer;box-shadow:0 5px 18px rgba(255,107,157,.28);margin-top:5px;}
+.user-top{flex-shrink:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fff;border-bottom:1px solid #ffe4ee;}
+.ut-back{font-size:24px;color:#e02050;background:none;border:none;cursor:pointer;}
+.ut-title{font-size:16px;font-weight:600;color:#111;}
+.user-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 24px;background:#fff5f8;}
+.user-card{background:#fff;border-radius:20px;padding:20px 16px;margin-bottom:13px;box-shadow:0 2px 14px rgba(255,107,157,.08);}
+.uc-top{display:flex;align-items:center;gap:13px;margin-bottom:13px;}
+.uc-av{width:66px;height:66px;border-radius:50%;background:#ffccd8;border:2.5px solid #fff;box-shadow:0 2px 9px rgba(255,107,157,.16);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;flex-shrink:0;}
+.uc-av img{width:100%;height:100%;object-fit:cover;}
+.uc-name{font-size:18px;font-weight:600;color:#111;}
+.uc-info{font-size:12px;color:#c0a8b4;margin-top:3px;}
+.uc-bio{font-size:14px;color:#2a0814;line-height:1.75;padding-top:12px;border-top:1px solid #ffe4ee;}
+.uc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.utag{padding:3px 10px;border-radius:8px;font-size:12px;background:#fff0f4;color:#e02050;border:1px solid #ffccd8;}
+.posts-title{font-size:13px;font-weight:600;color:#e02050;margin-bottom:11px;letter-spacing:.5px;}
+.post-card{background:#fff;border-radius:15px;padding:13px;margin-bottom:10px;box-shadow:0 2px 11px rgba(255,107,157,.06);}
+.pc-text{font-size:14px;line-height:1.75;color:#2a0814;white-space:pre-wrap;margin-bottom:8px;}
+.pc-imgs{display:grid;gap:3px;border-radius:10px;overflow:hidden;margin-bottom:8px;}
+.pc-imgs.one{grid-template-columns:1fr;}.pc-imgs.two{grid-template-columns:1fr 1fr;}
+.pc-imgs img{width:100%;aspect-ratio:4/3;object-fit:cover;cursor:pointer;}
+.pc-meta{font-size:11px;color:#c0a8b4;margin-bottom:8px;}
+.pc-coms{padding-top:9px;border-top:1px solid #ffe4ee;}
+.pc-com{font-size:13px;color:#2a0814;padding:2px 0;line-height:1.5;}
+.pc-cnm{color:#e02050;font-weight:600;}
+.pc-add{display:flex;gap:6px;margin-top:8px;}
+.pc-inp{flex:1;padding:7px 12px;border:1.5px solid #ffdcea;border-radius:16px;background:#fff8fa;font-family:inherit;font-size:13px;color:#2a0814;outline:none;}
+.pc-inp::placeholder{color:#e8b0c4;}.pc-inp:focus{border-color:#ff6b9d;}
+.pc-btn{padding:7px 13px;background:#ff6b9d;color:#fff;border:none;border-radius:16px;font-family:inherit;font-size:13px;cursor:pointer;}
+.mask{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.38);backdrop-filter:blur(4px);display:none;align-items:flex-end;}
+.mask.on{display:flex;}
+.menu-sheet{background:#fff;border-radius:22px 22px 0 0;padding:18px 14px 36px;width:100%;animation:slideUp .22s cubic-bezier(.22,1,.36,1);}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.ms-hint{font-size:12px;color:#c0a8b4;text-align:center;margin-bottom:15px;}
+.ms-list{display:flex;flex-direction:column;gap:9px;}
+.ms-btn{display:flex;align-items:center;gap:13px;padding:15px 16px;border:none;border-radius:15px;background:#fff5f8;cursor:pointer;font-family:inherit;font-size:15px;color:#111;font-weight:500;width:100%;text-align:left;transition:background .13s;}
+.ms-btn:active{background:#ffe0ec;}.ms-btn.danger{color:#e02050;}.ms-btn.cancel{background:#f2f2f2;color:#888;}
+.ms-ic{font-size:21px;width:26px;text-align:center;flex-shrink:0;}
+.fav-bar{position:fixed;top:62px;left:50%;transform:translateX(-50%) translateY(-14px);background:#fff;border-radius:16px;padding:12px 18px;box-shadow:0 8px 26px rgba(255,107,157,.22);border:1px solid #ffccd8;display:none;align-items:center;gap:11px;z-index:200;white-space:nowrap;}
+.fav-bar.on{display:flex;animation:favIn .26s ease;}
+@keyframes favIn{from{opacity:0;transform:translateX(-50%) translateY(-24px)}to{opacity:1;transform:translateX(-50%) translateY(-14px)}}
+.fb-ic{font-size:22px;}.fb-main{font-size:14px;font-weight:500;color:#111;}.fb-sub{font-size:11px;color:#c0a8b4;margin-top:1px;}
+.empty{text-align:center;padding:28px 20px;color:#ddaabc;}
+.empty-ic{font-size:28px;margin-bottom:6px;opacity:.38;}.empty-tx{font-size:13px;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(36px);background:rgba(36,6,14,.87);color:#fff;padding:10px 22px;border-radius:18px;font-size:13px;z-index:999;transition:transform .18s;pointer-events:none;backdrop-filter:blur(8px);}
 #toast.on{transform:translateX(-50%) translateY(0);}
-.imodal{position:fixed;inset:0;background:rgba(22,32,58,.9);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
-.imodal.on{display:flex;}
-.imodal img{max-width:92vw;max-height:88vh;border-radius:13px;}
-::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-thumb{background:rgba(74,155,130,.24);border-radius:2px;}
-@media(min-width:600px){.ugrid{grid-template-columns:repeat(3,1fr);}.scroll-area{max-width:620px;margin:0 auto;}}
+.img-view{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:500;display:none;align-items:center;justify-content:center;}
+.img-view.on{display:flex;}
+.img-view img{max-width:92vw;max-height:88vh;border-radius:11px;}
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-thumb{background:rgba(255,107,157,.15);border-radius:2px;}
 </style>
 </head>
 <body>
-<div class="bg"></div>
-<div id="auth">
-  <div class="auth-wrap">
-    <div class="auth-box gc">
-      <div class="brand">
-        <div class="brand-orb">🪬</div>
-        <h1>如 玉</h1>
-        <p>公益婚恋 · 真诚相遇</p>
-        <span class="brand-badge">❤ 免费 · 公益 · 用心</span>
+<div id="root">
+  <div class="pg on" id="pg-chat">
+    <div class="chat-top">
+      <div class="ct-left">
+        <button class="ct-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#07c160" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
       </div>
-      <div class="atabs">
-        <button class="atab on" onclick="switchTab('login')">登 录</button>
-        <button class="atab" onclick="switchTab('reg')">注 册</button>
+      <div class="ct-title">如玉公益婚恋</div>
+      <div class="ct-right">
+        <button class="ct-star" id="ct-star" onclick="toggleFav()" title="收藏">☆</button>
+        <button class="ct-city" id="ct-city" onclick="ME.name?openMenu():navTo('setup')"></button>
       </div>
-      <div id="f-login" class="aform">
-        <div class="fg"><label>账号（手机号 / 邮箱）</label><input class="fi" id="l-em" type="text" placeholder="请输入账号"></div>
-        <div class="fg"><label>密码</label><input class="fi" id="l-pw" type="password" placeholder="请输入密码" onkeydown="if(event.key==='Enter')doLogin()"></div>
-        <div class="ferr" id="l-err"></div>
-        <button class="btn-m" onclick="doLogin()">登 录</button>
-        <p class="alink" onclick="switchTab('reg')">还没有账号？立即免费注册 →</p>
-      </div>
-      <div id="f-reg" class="aform" style="display:none">
-        <div class="fg"><label>昵称</label><input class="fi" id="r-nm" placeholder="您希望别人怎么称呼您"></div>
-        <div class="fg"><label>账号（手机号 / 邮箱）</label><input class="fi" id="r-em" placeholder="用于登录"></div>
-        <div class="fg"><label>年龄（须满18周岁）</label><input class="fi" id="r-age" type="number" placeholder="您的年龄" min="18" max="99"></div>
-        <div class="fg"><label>性别</label>
-          <div class="grow">
-            <button class="gb" onclick="pickG(this,'male')">👨 先生</button>
-            <button class="gb" onclick="pickG(this,'female')">👩 女士</button>
+    </div>
+    <div class="chat-msgs" id="chat-msgs"></div>
+    <div class="chat-bar">
+      <label class="bar-cam" title="发送图片">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="13" r="3"/><path d="M20 7h-3.5l-1.5-2h-6L7.5 7H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1z"/>
+        </svg>
+        <input type="file" accept="image/*" style="display:none" onchange="sendImage(event)">
+      </label>
+      <textarea class="bar-inp" id="bar-inp" placeholder="上个聊天" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();handleSend()}" rows="1"></textarea>
+      <button class="bar-join" id="bar-join" onclick="ME.name?handleSend():navTo('setup')">加入聊天</button>
+      <button class="bar-send" id="bar-send" onclick="handleSend()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="pg" id="pg-setup">
+    <div class="setup-top">
+      <button class="st-back" onclick="navTo('chat')">‹</button>
+      <div class="st-title">我的资料</div>
+      <button class="st-save" onclick="doSaveSetup()">保存</button>
+    </div>
+    <div class="setup-scroll">
+      <div class="av-pick" id="av-pick" onclick="triggerAv()">😊</div>
+      <div class="form-card">
+        <div class="fc-t">基本信息</div>
+        <div class="ff">
+          <div class="fr">
+            <div><div class="fl">昵 称</div><input class="fi" id="s-name" placeholder="你的名字"></div>
+            <div><div class="fl">年 龄</div><input class="fi" id="s-age" type="number" placeholder="年龄" min="18" max="99"></div>
           </div>
+          <div class="fr">
+            <div><div class="fl">城 市</div>
+              <select class="fi" id="s-city" style="cursor:pointer">
+                <option value="">选择城市</option>
+                <option>北京</option><option>上海</option><option>广州</option>
+                <option>深圳</option><option>成都</option><option>杭州</option>
+                <option>南京</option><option>武汉</option><option>西安</option>
+                <option>重庆</option><option>其他</option>
+              </select>
+            </div>
+            <div><div class="fl">职 业</div><input class="fi" id="s-job" placeholder="职业"></div>
+          </div>
+          <div><div class="fl">性 别</div>
+            <div class="gbr">
+              <button class="gb" onclick="setGender(this,'female')">👩 女士</button>
+              <button class="gb" onclick="setGender(this,'male')">👨 先生</button>
+            </div>
+          </div>
+          <div><div class="fl">个人简介</div><textarea class="fta" id="s-bio" placeholder="简单介绍一下自己，让有缘人了解你～"></textarea></div>
+          <div><div class="fl">兴趣爱好（逗号分隔）</div><input class="fi" id="s-hobby" placeholder="旅行, 读书, 烹饪..."></div>
         </div>
-        <div class="fg"><label>密码（6位以上）</label><input class="fi" id="r-pw" type="password" placeholder="设置密码"></div>
-        <div class="ferr" id="r-err"></div>
-        <button class="btn-m" onclick="doReg()">免 费 注 册</button>
-        <p class="alink" onclick="switchTab('login')">已有账号？去登录 →</p>
       </div>
+      <button class="save-big" onclick="doSaveSetup()">保 存 并 加 入 聊 天</button>
+    </div>
+  </div>
+  <div class="pg" id="pg-user">
+    <div class="user-top">
+      <button class="ut-back" onclick="navTo('chat')">‹</button>
+      <div class="ut-title" id="ut-title">用户资料</div>
+      <div style="width:32px"></div>
+    </div>
+    <div class="user-scroll">
+      <div class="user-card" id="user-card"></div>
+      <div class="posts-title">Ta 的动态</div>
+      <div id="user-posts"></div>
     </div>
   </div>
 </div>
-<div id="app">
-  <div class="topbar">
-    <div class="topbar-logo">如玉 <em>公益婚恋</em></div>
-    <div class="topbar-r">
-      <div class="top-av" id="top-av" onclick="goPage('prof','bn-prof')">🪬</div>
-      <button class="btn-out" onclick="doLogout()">退 出</button>
+<div class="mask" id="mask" onclick="if(event.target===this)closeMask()">
+  <div class="menu-sheet">
+    <div class="ms-hint">如玉社区</div>
+    <div class="ms-list">
+      <button class="ms-btn" onclick="closeMask();navTo('setup')"><span class="ms-ic">✏️</span>编辑我的资料</button>
+      <button class="ms-btn" id="ms-fav" onclick="closeMask();toggleFav()"><span class="ms-ic" id="ms-fav-ic">☆</span><span id="ms-fav-tx">收藏到屏幕推荐</span></button>
+      <button class="ms-btn danger" onclick="closeMask();doExit()"><span class="ms-ic">🚪</span>退出聊天室</button>
+      <button class="ms-btn cancel" onclick="closeMask()"><span class="ms-ic" style="opacity:.35">✕</span>取消</button>
     </div>
-  </div>
-  <div class="scroll-area" id="scroll-area">
-    <div class="page on" id="page-feed">
-      <div class="composer gc">
-        <div class="comp-top">
-          <div class="top-av" id="comp-av">🪬</div>
-          <span class="comp-nm" id="comp-nm">今天想说点什么...</span>
-        </div>
-        <textarea class="comp-ta" id="post-ta" placeholder="分享你的故事、心情或期待..."></textarea>
-        <div id="iprev"></div>
-        <div class="comp-bot">
-          <label class="btn-ic" style="cursor:pointer">🖼 图片
-            <input type="file" accept="image/*" multiple style="display:none" onchange="prevImgs(event)">
-          </label>
-          <button class="btn-pub" onclick="pubPost()">发 布</button>
-        </div>
-      </div>
-      <div id="posts"></div>
-    </div>
-    <div class="page" id="page-disc">
-      <div class="ph"><h2>寻 觅 良 缘</h2><p>每一段相遇都是缘分</p></div>
-      <div class="filters">
-        <button class="fchip on" onclick="filt('all',this)">全部</button>
-        <button class="fchip" onclick="filt('female',this)">👩 女士</button>
-        <button class="fchip" onclick="filt('male',this)">👨 先生</button>
-        <button class="fchip" onclick="filt('new',this)">🌱 最新</button>
-      </div>
-      <div class="ugrid" id="ugrid"></div>
-    </div>
-    <div class="page" id="page-marry">
-      <div class="ph"><h2>征 婚 帖</h2><p>认真寻缘，真诚相遇</p></div>
-      <div class="gc" style="border-radius:var(--r);padding:15px;margin-bottom:14px;">
-        <div class="stitle">✦ 发布征婚帖</div>
-        <textarea class="comp-ta" id="marry-ta" placeholder="介绍一下自己，写下对另一半的期待...&#10;&#10;例如：本人女，28岁，杭州教师，性格温和，希望遇见踏实上进的人..." style="min-height:100px"></textarea>
-        <div style="margin-top:10px;text-align:right"><button class="btn-pub" onclick="pubMarry()">发 布</button></div>
-      </div>
-      <div id="marry-list"></div>
-    </div>
-    <div class="page" id="page-prof">
-      <div class="prof-hero">
-        <div class="prof-top">
-          <div class="pav-wrap" id="p-av" onclick="pickAv()">🪬</div>
-          <div class="pinfo">
-            <h2 id="p-name">如玉用户</h2>
-            <p id="p-bio">这个人还没留下什么...</p>
-            <span class="pbadge">✦ 公益会员</span>
-          </div>
-        </div>
-        <div class="pstats">
-          <div class="st"><div class="st-n" id="s-post">0</div><div class="st-l">动态</div></div>
-          <div class="st"><div class="st-n" id="s-like">0</div><div class="st-l">获赞</div></div>
-          <div class="st"><div class="st-n" id="s-flw">0</div><div class="st-l">关注</div></div>
-          <div class="st"><div class="st-n" id="s-fav">0</div><div class="st-l">收藏</div></div>
-        </div>
-      </div>
-      <div class="psec gc">
-        <div class="stitle">👀 谁看过我</div>
-        <div id="vis-list"></div>
-      </div>
-      <div class="psec gc">
-        <div class="stitle">⭐ 我的收藏</div>
-        <div id="fav-list"></div>
-      </div>
-      <div class="psec gc">
-        <div class="stitle">✦ 编辑资料</div>
-        <div class="eform">
-          <div class="erow">
-            <div><div class="elb">昵称</div><input class="ein" id="e-nm" placeholder="昵称"></div>
-            <div><div class="elb">年龄</div><input class="ein" id="e-age" type="number" placeholder="年龄"></div>
-          </div>
-          <div class="erow">
-            <div><div class="elb">城市</div><input class="ein" id="e-city" placeholder="城市"></div>
-            <div><div class="elb">职业</div><input class="ein" id="e-job" placeholder="职业"></div>
-          </div>
-          <div><div class="elb">个人简介</div><textarea class="eta" id="e-bio" placeholder="介绍一下自己～"></textarea></div>
-          <div><div class="elb">兴趣爱好（逗号分隔）</div><input class="ein" id="e-hob" placeholder="旅行, 读书, 烹饪..."></div>
-          <button class="btn-m" onclick="saveProf()">保 存 资 料</button>
-          <div class="pwd-wrap">
-            <div class="pwd-title">🔒 修改密码</div>
-            <div class="erow">
-              <div><div class="elb">当前密码</div><input class="ein" id="p-old" type="password" placeholder="当前密码"></div>
-              <div><div class="elb">新密码</div><input class="ein" id="p-new" type="password" placeholder="新密码（6位以上）"></div>
-            </div>
-            <div style="margin-top:10px">
-              <button class="btn-m" style="background:linear-gradient(135deg,#6a8fa8,#3c596e);letter-spacing:2px" onclick="changePwd()">修 改 密 码</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="psec gc">
-        <div class="stitle">📜 我的动态</div>
-        <div id="my-posts"></div>
-      </div>
-    </div>
-  </div>
-  <div class="bot-nav">
-    <button class="bn on" onclick="goPage('feed',this)" id="bn-feed">
-      <span class="bi">🏠</span><span class="bl">动态</span>
-    </button>
-    <button class="bn" onclick="goPage('disc',this)" id="bn-disc">
-      <span class="bi">🔍</span><span class="bl">发现</span>
-    </button>
-    <button class="bn" onclick="goPage('marry',this)" id="bn-marry">
-      <span class="bi">💌</span><span class="bl">征婚</span>
-    </button>
-    <button class="bn" onclick="goPage('prof',this)" id="bn-prof">
-      <span class="bi">👤</span><span class="bl">我的</span>
-    </button>
   </div>
 </div>
-<input type="file" id="av-inp" accept="image/*" style="display:none" onchange="applyAv(event)">
+<div class="fav-bar" id="fav-bar">
+  <span class="fb-ic">⭐</span>
+  <div><div class="fb-main">已收藏到推荐！</div><div class="fb-sub">Safari：点分享键 → 添加到主屏幕</div></div>
+</div>
+<input type="file" id="av-file" accept="image/*" style="display:none" onchange="applyAvatar(event)">
 <div id="toast"></div>
-<div class="imodal" id="imodal" onclick="this.classList.remove('on')">
-  <img id="imodal-img" src="" alt="">
-</div>
+<div class="img-view" id="img-view" onclick="this.classList.remove('on')"><img id="img-view-src" src="" alt=""></div>
 <script>
 const DB={
-  users:  ()=>JSON.parse(localStorage.getItem('ry_u')||'[]'),
-  sU:     v=>localStorage.setItem('ry_u',JSON.stringify(v)),
-  posts:  ()=>JSON.parse(localStorage.getItem('ry_p')||'[]'),
-  sP:     v=>localStorage.setItem('ry_p',JSON.stringify(v)),
-  sess:   ()=>localStorage.getItem('ry_s'),
-  setSess:id=>localStorage.setItem('ry_s',id),
-  clrS:   ()=>localStorage.removeItem('ry_s'),
-  flws:   uid=>JSON.parse(localStorage.getItem('ry_f_'+uid)||'[]'),
-  sFlws:  (uid,v)=>localStorage.setItem('ry_f_'+uid,JSON.stringify(v)),
-  favs:   uid=>JSON.parse(localStorage.getItem('ry_fav_'+uid)||'[]'),
-  sFavs:  (uid,v)=>localStorage.setItem('ry_fav_'+uid,JSON.stringify(v)),
-  vis:    uid=>JSON.parse(localStorage.getItem('ry_vis_'+uid)||'[]'),
-  sVis:   (uid,v)=>localStorage.setItem('ry_vis_'+uid,JSON.stringify(v)),
-  marry:  ()=>JSON.parse(localStorage.getItem('ry_marry')||'[]'),
-  sMarry: v=>localStorage.setItem('ry_marry',JSON.stringify(v)),
+  me:()=>JSON.parse(localStorage.getItem('ruyu_me')||'null'),
+  saveMe:(v)=>localStorage.setItem('ruyu_me',JSON.stringify(v)),
+  msgs:()=>JSON.parse(localStorage.getItem('ruyu_msg')||'[]'),
+  saveMsgs:(v)=>localStorage.setItem('ruyu_msg',JSON.stringify(v)),
+  users:()=>JSON.parse(localStorage.getItem('ruyu_usr')||'{}'),
+  saveUsers:(v)=>localStorage.setItem('ruyu_usr',JSON.stringify(v)),
+  fav:()=>localStorage.getItem('ruyu_fav')==='1',
+  saveFav:(v)=>localStorage.setItem('ruyu_fav',v?'1':'0'),
 };
-let U=null,imgs=[],gender='';
-function seed(){
-  if(DB.users().length)return;
-  DB.sU([
-    {id:'s1',name:'婉清',email:'wanqing@demo.com',pwd:'123456',age:28,city:'杭州',gender:'female',emoji:'👩',job:'教师',bio:'喜欢安静的生活，爱读书爱旅行。',hobby:'读书,旅行,茶艺',avatar:null,likeCount:34,joinTime:Date.now()-500000000},
-    {id:'s2',name:'子谦',email:'ziqian@demo.com',pwd:'123456',age:31,city:'成都',gender:'male',emoji:'👨',job:'建筑师',bio:'性格沉稳，喜欢登山和摄影。',hobby:'摄影,登山,美食',avatar:null,likeCount:22,joinTime:Date.now()-400000000},
-    {id:'s3',name:'若初',email:'ruochu@demo.com',pwd:'123456',age:26,city:'北京',gender:'female',emoji:'👩',job:'设计师',bio:'热爱生活，喜欢做手工和花艺。',hobby:'花艺,手工,瑜伽',avatar:null,likeCount:58,joinTime:Date.now()-300000000},
-    {id:'s4',name:'明远',email:'mingyuan@demo.com',pwd:'123456',age:33,city:'上海',gender:'male',emoji:'👨',job:'医生',bio:'工作忙碌，向往烟火气的温暖。',hobby:'烹饪,读书,跑步',avatar:null,likeCount:19,joinTime:Date.now()-200000000},
-    {id:'s5',name:'思宁',email:'sining@demo.com',pwd:'123456',age:29,city:'南京',gender:'female',emoji:'👩',job:'律师',bio:'独立而温柔，期待认真的感情。',hobby:'音乐,电影,烘焙',avatar:null,likeCount:47,joinTime:Date.now()-100000000},
+let ME=DB.me()||{id:'u'+Date.now(),name:'',age:'',city:'',job:'',gender:'',bio:'',hobby:'',avatar:null,emoji:'😊'};
+let gSel=ME.gender||'';
+function seedDemo(){
+  if(DB.msgs().length)return;
+  DB.saveUsers({
+    d1:{id:'d1',name:'婉清',emoji:'👩',avatar:null,gender:'female',age:28,city:'杭州',job:'教师',bio:'喜欢安静的生活，爱读书旅行，期待遇见踏实上进的人。',hobby:'读书,旅行,茶艺'},
+    d2:{id:'d2',name:'子谦',emoji:'👨',avatar:null,gender:'male',age:31,city:'成都',job:'建筑师',bio:'性格沉稳，喜欢登山摄影，希望找到一起慢慢生活的人。',hobby:'摄影,登山,美食'},
+    d3:{id:'d3',name:'若初',emoji:'👩',avatar:null,gender:'female',age:26,city:'北京',job:'设计师',bio:'热爱生活，喜欢做手工和花艺，向往简单的幸福。',hobby:'花艺,手工,瑜伽'},
+    d4:{id:'d4',name:'明远',emoji:'👨',avatar:null,gender:'male',age:33,city:'上海',job:'医生',bio:'工作忙碌，向往烟火气的温暖，希望有人等我回家。',hobby:'烹饪,读书,跑步'},
+    d5:{id:'d5',name:'思宁',emoji:'👩',avatar:null,gender:'female',age:29,city:'南京',job:'律师',bio:'独立而温柔，期待认真对待感情的人。',hobby:'音乐,电影,烘焙'},
+  });
+  const n=Date.now();
+  DB.saveMsgs([
+    {id:'m1',uid:'d1',name:'婉清',emoji:'👩',av:null,city:'杭州',type:'text',text:'今天真是倒霉的一天',ts:n-7200000,coms:[]},
+    {id:'m2',uid:'d4',name:'明远',emoji:'👨',av:null,city:'上海',type:'text',text:'外滩晚上的风很大、夜景不错 👍',ts:n-6800000,coms:[]},
+    {id:'m3',uid:'d2',name:'子谦',emoji:'👨',av:null,city:'成都',type:'text',text:'我想有一个不太好看的女朋友',ts:n-6400000,coms:[]},
+    {id:'m4',uid:'d3',name:'若初',emoji:'👩',av:null,city:'北京',type:'text',text:'对不起，我太好看啦。我们不合适 😄',ts:n-6000000,coms:[]},
+    {id:'m5',uid:'d5',name:'思宁',emoji:'👩',av:null,city:'南京',type:'text',text:'估计没人愿意当不太好看的人',ts:n-5600000,coms:[]},
+    {id:'m6',uid:'d2',name:'子谦',emoji:'👨',av:null,city:'成都',type:'text',text:'今天天气真好 😄',ts:n-5200000,coms:[]},
+    {id:'m7',uid:'d1',name:'婉清',emoji:'👩',av:null,city:'杭州',type:'text',text:'小人得志 👀',ts:n-4800000,coms:[]},
+    {id:'m8',uid:'d4',name:'明远',emoji:'👨',av:null,city:'上海',type:'img',imgUrl:'https://picsum.photos/seed/mtn10/600/400',ts:n-4400000,coms:[]},
+    {id:'m9',uid:'d2',name:'子谦',emoji:'👨',av:null,city:'成都',type:'text',text:'@ 若初、快点走、前方的风景很美',ts:n-4000000,coms:[]},
+    {id:'m10',uid:'d3',name:'若初',emoji:'👩',av:null,city:'北京',type:'text',text:'@ 子谦，我才到这里',ts:n-3600000,coms:[]},
+    {id:'m11',uid:'d5',name:'思宁',emoji:'👩',av:null,city:'南京',type:'img',imgUrl:'https://picsum.photos/seed/lk10/600/400',ts:n-3200000,coms:[]},
   ]);
-  DB.sP([
-    {id:'p1',uid:'s1',name:'婉清',emoji:'👩',av:null,city:'杭州',age:28,body:'今天去了西湖，薄雾里的断桥美得像画。有时候觉得，有些风景要等到对的心情、对的人，才看得见其中的意味。\n\n希望你也是快乐的 🍃',imgs:['https://picsum.photos/seed/xh1/700/450','https://picsum.photos/seed/xh2/700/450'],likes:41,likedBy:[],comments:[{name:'子谦',emoji:'👨',av:null,text:'断桥的早晨确实很美！'},{name:'若初',emoji:'👩',av:null,text:'太有感觉了 🍃'}],time:'3小时前',ts:Date.now()-10800000},
-    {id:'p2',uid:'s2',name:'子谦',emoji:'👨',av:null,city:'成都',age:31,body:'周末爬了峨眉山，云海翻涌的那一刻突然想到，人生很多事情不必急 📷',imgs:['https://picsum.photos/seed/em1/700/450'],likes:27,likedBy:[],comments:[{name:'婉清',emoji:'👩',av:null,text:'羡慕！我也想去 🏔️'}],time:'昨天',ts:Date.now()-86400000},
-    {id:'p3',uid:'s3',name:'若初',emoji:'👩',av:null,city:'北京',age:26,body:'做了一束花想送给秋天 🌸\n\n如果能遇见同样热爱生活的人，大概就是缘分了。',imgs:['https://picsum.photos/seed/fl1/700/450','https://picsum.photos/seed/fl2/700/450'],likes:63,likedBy:[],comments:[],time:'2天前',ts:Date.now()-172800000},
-    {id:'p4',uid:'s4',name:'明远',emoji:'👨',av:null,city:'上海',age:33,body:'值完夜班，在医院楼顶看了会儿天亮。\n\n希望遇见的你，也能珍惜平凡里的小确幸。',imgs:[],likes:35,likedBy:[],comments:[{name:'思宁',emoji:'👩',av:null,text:'辛苦了，这份坚持很了不起。'}],time:'3天前',ts:Date.now()-259200000},
-  ]);
-  DB.sMarry([
-    {id:'m1',uid:'s1',name:'婉清',emoji:'👩',av:null,age:28,city:'杭州',gender:'female',body:'本人女，28岁，杭州教师，性格温和安静，爱读书旅行。\n希望对方：踏实上进，有责任心，愿意一起慢慢生活。',time:'2天前',ts:Date.now()-172800000},
-    {id:'m2',uid:'s2',name:'子谦',emoji:'👨',av:null,age:31,city:'成都',gender:'male',body:'本人男，31岁，成都建筑师，性格沉稳，爱好登山摄影。\n希望对方：温柔善良，热爱生活，不一定漂亮但要真实。',time:'3天前',ts:Date.now()-259200000},
-  ]);
 }
-seed();
-(function(){const ss=DB.sess();if(ss){const u=DB.users().find(x=>x.id===ss);if(u){U=u;enterApp(false);}}})();
-function switchTab(t){
-  document.querySelectorAll('.atab').forEach((b,i)=>b.classList.toggle('on',(t==='login'&&i===0)||(t==='reg'&&i===1)));
-  document.getElementById('f-login').style.display=t==='login'?'flex':'none';
-  document.getElementById('f-reg').style.display=t==='reg'?'flex':'none';
-  _err('l-err','');_err('r-err','');
+seedDemo();
+renderAllMsgs();
+syncUI();
+syncFavUI();
+function syncUI(){
+  const j=document.getElementById('bar-join'),s=document.getElementById('bar-send'),i=document.getElementById('bar-inp'),c=document.getElementById('ct-city');
+  if(ME.name){j.style.display='none';s.style.display='flex';i.placeholder='说点什么...';c.textContent=ME.city||'';}
+  else{j.style.display='block';s.style.display='none';i.placeholder='上个聊天';c.textContent='';}
 }
-function pickG(btn,g){gender=g;document.querySelectorAll('.gb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
-function doLogin(){
-  const em=_v('l-em'),pw=_v('l-pw');
-  if(!em||!pw){_err('l-err','请填写账号和密码');return;}
-  const u=DB.users().find(x=>x.email===em&&x.pwd===pw);
-  if(!u){_err('l-err','账号或密码错误');return;}
-  U=u;DB.setSess(u.id);enterApp(true);
+function syncFavUI(){
+  const f=DB.fav();
+  document.getElementById('ct-star').textContent=f?'⭐':'☆';
+  document.getElementById('ms-fav-ic').textContent=f?'⭐':'☆';
+  document.getElementById('ms-fav-tx').textContent=f?'取消推荐收藏':'收藏到屏幕推荐';
 }
-function doReg(){
-  const nm=_v('r-nm'),em=_v('r-em'),age=parseInt(_v('r-age')),pw=_v('r-pw');
-  if(!nm||!em||!age||!pw){_err('r-err','请填写所有必填项');return;}
-  if(pw.length<6){_err('r-err','密码至少6位');return;}
-  if(age<18){_err('r-err','年龄须满18周岁');return;}
-  const us=DB.users();
-  if(us.find(x=>x.email===em)){_err('r-err','该账号已被注册');return;}
-  const nu={id:'u_'+Date.now(),name:nm,email:em,pwd:pw,age,gender,city:'',job:'',bio:'',hobby:'',emoji:gender==='female'?'👩':gender==='male'?'👨':'🧑',avatar:null,likeCount:0,joinTime:Date.now()};
-  us.push(nu);DB.sU(us);U=nu;DB.setSess(nu.id);enterApp(true);toast('🎉 欢迎加入如玉，祝您觅得良缘！');
+function renderAllMsgs(){
+  const box=document.getElementById('chat-msgs');box.innerHTML='';
+  DB.msgs().forEach(m=>box.appendChild(buildMsgEl(m)));scrollToBottom();
 }
-function doLogout(){
-  DB.clrS();U=null;
-  const app=document.getElementById('app');app.classList.remove('on');app.style.display='none';
-  document.getElementById('auth').style.display='block';
-  document.getElementById('l-em').value='';document.getElementById('l-pw').value='';
-  switchTab('login');toast('👋 已安全退出');
+function buildMsgEl(m){
+  if(m.type==='sys'){const d=document.createElement('div');d.className='time-sep';d.textContent=m.text;return d;}
+  const isMe=m.uid===ME.id;
+  const wrap=document.createElement('div');wrap.className='mrow'+(isMe?' me':'');wrap.id='mrow-'+m.id;
+  const avHTML=m.av?`<img src="${m.av}">`:(m.emoji||'😊');
+  const timeStr=formatTime(m.ts);
+  let contentHTML=m.type==='img'?`<div class="m-img" onclick="viewImg('${m.imgUrl}')"><img src="${m.imgUrl}" loading="lazy"></div>`:`<div class="bubble">${esc(m.text)}</div>`;
+  const comsHTML=(m.coms||[]).map(c=>`<div class="com-item"><span class="com-name">${esc(c.n)}：</span>${esc(c.t)}</div>`).join('');
+  wrap.innerHTML=`
+    <div class="m-av" onclick="openUser('${m.uid}')">${avHTML}</div>
+    <div class="m-col">
+      <div class="m-meta"><span>${esc(m.name)}</span>${m.city?`<span style="font-size:10px;color:#d8b0c0">${m.city}</span>`:''}<span class="m-time">${timeStr}</span></div>
+      ${contentHTML}
+      <div class="coms ${comsHTML?'open':''}" id="coms-${m.id}">
+        <div id="coms-list-${m.id}">${comsHTML}</div>
+        <div class="com-add" id="com-add-${m.id}" style="display:none">
+          <input class="com-inp" id="com-inp-${m.id}" placeholder="写评论...">
+          <button class="com-btn" onclick="submitCom('${m.id}')">发送</button>
+        </div>
+      </div>
+    </div>`;
+  const bub=wrap.querySelector('.bubble');
+  if(bub)bub.onclick=()=>toggleComBox(m.id);
+  return wrap;
 }
-function enterApp(isNew){
-  document.getElementById('auth').style.display='none';
-  const app=document.getElementById('app');app.style.display='flex';app.classList.add('on');
-  refreshNav();renderPosts();renderDisc();renderMarry();
-  goPage('feed','bn-feed');
-  if(!isNew)toast('欢迎回来，'+U.name+' 💕');
+function toggleComBox(mid){
+  if(!ME.name){navTo('setup');return;}
+  const box=document.getElementById('coms-'+mid),add=document.getElementById('com-add-'+mid);if(!box||!add)return;
+  box.classList.add('open');add.style.display=add.style.display==='none'?'flex':'none';
+  if(add.style.display==='flex')document.getElementById('com-inp-'+mid)?.focus();
 }
-function syncU(){const us=DB.users(),i=us.findIndex(x=>x.id===U.id);if(i>=0){us[i]=U;DB.sU(us);}}
-function refreshNav(){
-  const h=U.avatar?`<img src="${U.avatar}">`:(U.emoji||'🧑');
-  document.getElementById('top-av').innerHTML=h;
-  document.getElementById('comp-av').innerHTML=h;
-  document.getElementById('comp-nm').textContent=U.name+'，今天想说什么？';
+function submitCom(mid){
+  if(!ME.name){navTo('setup');return;}
+  const inp=document.getElementById('com-inp-'+mid);const text=inp?.value.trim();if(!text)return;
+  const msgs=DB.msgs();const m=msgs.find(x=>x.id===mid);if(!m)return;
+  m.coms=m.coms||[];m.coms.push({n:ME.name,t:text,uid:ME.id});DB.saveMsgs(msgs);
+  inp.value='';
+  const list=document.getElementById('coms-list-'+mid);
+  if(list){const d=document.createElement('div');d.className='com-item';d.innerHTML=`<span class="com-name">${esc(ME.name)}：</span>${esc(text)}`;list.appendChild(d);}
+  document.getElementById('com-add-'+mid).style.display='none';
+  toast('评论成功！聊天室好友可见 💌');
 }
-function goPage(pid,btnOrId){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.bn').forEach(b=>b.classList.remove('on'));
-  document.getElementById('page-'+pid).classList.add('on');
-  const btn=typeof btnOrId==='string'?document.getElementById(btnOrId):btnOrId;
-  if(btn)btn.classList.add('on');
-  document.getElementById('scroll-area').scrollTop=0;
-  if(pid==='prof')loadProf();
-  if(pid==='disc')renderDisc();
-  if(pid==='marry')renderMarry();
+function handleSend(){
+  if(!ME.name){navTo('setup');return;}
+  const inp=document.getElementById('bar-inp');const text=inp.value.trim();if(!text)return;
+  appendMsg({id:'m'+Date.now(),uid:ME.id,name:ME.name,emoji:ME.emoji||'😊',av:ME.avatar,city:ME.city,type:'text',text,ts:Date.now(),coms:[]});
+  inp.value='';
 }
-function renderPosts(){
-  const ps=DB.posts().sort((a,b)=>b.ts-a.ts);
-  const c=document.getElementById('posts');c.innerHTML='';
-  if(!ps.length){c.innerHTML='<div class="empty"><div class="eico">🪬</div><p>还没有动态，来发第一条吧～</p></div>';return;}
-  ps.forEach(p=>c.appendChild(mkPost(p)));
+function sendImage(ev){
+  if(!ME.name){navTo('setup');return;}
+  const file=ev.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{const img=new Image();img.onload=()=>{
+    const cv=document.createElement('canvas');const maxW=600,r=Math.min(maxW/img.width,1);cv.width=img.width*r;cv.height=img.height*r;cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    appendMsg({id:'m'+Date.now(),uid:ME.id,name:ME.name,emoji:ME.emoji||'😊',av:ME.avatar,city:ME.city,type:'img',imgUrl:cv.toDataURL('image/jpeg',.82),ts:Date.now(),coms:[]});
+  };img.src=e.target.result;};reader.readAsDataURL(file);ev.target.value='';
 }
-function mkPost(p){
-  const d=document.createElement('div');d.className='post gc';d.id='pc-'+p.id;
-  const av=p.av?`<img src="${p.av}">`:(p.emoji||'🧑');
-  const liked=(p.likedBy||[]).includes(U.id);
-  const faved=DB.favs(U.id).includes(p.id);
-  let imgH='';
-  if(p.imgs&&p.imgs.length){const cls=['','one','two','three'][Math.min(p.imgs.length,3)];imgH=`<div class="pimgs ${cls}">${p.imgs.map(s=>`<img src="${s}" onclick="bigImg('${s}')">`).join('')}</div>`;}
-  const comH=(p.comments||[]).map(c=>{const ca=c.av?`<img src="${c.av}">`:(c.emoji||'🧑');return`<div class="citem"><div class="cav">${ca}</div><div class="cbody"><div class="cnm">${esc(c.name)}</div><div class="ctxt">${esc(c.text)}</div></div></div>`;}).join('');
-  d.innerHTML=`
-    <div class="post-hd">
-      <div class="pav">${av}</div>
-      <div class="pmeta">
-        <div class="pnm">${esc(p.name)}</div>
-        <div class="pinfo"><span>${p.time}</span>${p.city?`<span class="ptag">📍${esc(p.city)}</span>`:''}${p.age?`<span class="ptag">${p.age}岁</span>`:''}</div>
+function appendMsg(msg){
+  const msgs=DB.msgs();msgs.push(msg);DB.saveMsgs(msgs);
+  const box=document.getElementById('chat-msgs');box.appendChild(buildMsgEl(msg));scrollToBottom();
+}
+function openUser(uid){
+  const us=DB.users();const u=us[uid]||(uid===ME.id?ME:null);if(!u)return;
+  document.getElementById('ut-title').textContent=u.name||'用户资料';
+  const tags=(u.hobby||'').split(',').filter(Boolean);
+  document.getElementById('user-card').innerHTML=`
+    <div class="uc-top">
+      <div class="uc-av">${u.avatar?`<img src="${u.avatar}">`:(u.emoji||'😊')}</div>
+      <div>
+        <div class="uc-name">${esc(u.name||'匿名用户')}</div>
+        <div class="uc-info">${u.age?u.age+'岁':''}${u.city?' · '+u.city:''}${u.job?' · '+u.job:''} ${u.gender==='female'?'👩':u.gender==='male'?'👨':''}</div>
       </div>
     </div>
-    <div class="pbody">${esc(p.body)}</div>${imgH}
-    <div class="pacts">
-      <button class="abtn ${liked?'on':''}" onclick="toggleLike('${p.id}',this)">${liked?'❤️':'🤍'} ${p.likes||0}</button>
-      <button class="abtn" onclick="toggleCom('${p.id}')">💬 ${(p.comments||[]).length}</button>
-      <button class="abtn ${faved?'on':''}" onclick="toggleFav('${p.id}',this)">${faved?'⭐':'☆'} ${faved?'已收藏':'收藏'}</button>
-    </div>
-    <div class="coms" id="com-${p.id}">
-      <div id="cl-${p.id}">${comH}</div>
-      <div class="crow"><input class="cinp" id="ci-${p.id}" placeholder="写下留言..." onkeydown="if(event.key==='Enter')sendCom('${p.id}')"><button class="btn-snd" onclick="sendCom('${p.id}')">发送</button></div>
-    </div>`;
-  return d;
-}
-function toggleLike(pid,btn){
-  const ps=DB.posts(),p=ps.find(x=>x.id===pid);if(!p)return;
-  p.likedBy=p.likedBy||[];const i=p.likedBy.indexOf(U.id);
-  if(i>=0){p.likedBy.splice(i,1);p.likes=Math.max(0,(p.likes||1)-1);btn.classList.remove('on');btn.innerHTML=`🤍 ${p.likes}`;}
-  else{p.likedBy.push(U.id);p.likes=(p.likes||0)+1;btn.classList.add('on');btn.innerHTML=`❤️ ${p.likes}`;
-    const us=DB.users(),au=us.find(x=>x.id===p.uid);if(au&&au.id!==U.id){au.likeCount=(au.likeCount||0)+1;DB.sU(us);}}
-  DB.sP(ps);
-}
-function toggleFav(pid,btn){
-  const favs=DB.favs(U.id),i=favs.indexOf(pid);
-  if(i>=0){favs.splice(i,1);btn.classList.remove('on');btn.innerHTML='☆ 收藏';toast('已取消收藏');}
-  else{favs.push(pid);btn.classList.add('on');btn.innerHTML='⭐ 已收藏';toast('⭐ 收藏成功');}
-  DB.sFavs(U.id,favs);
-}
-function toggleCom(pid){document.getElementById('com-'+pid).classList.toggle('on');}
-function sendCom(pid){
-  const inp=document.getElementById('ci-'+pid),text=inp.value.trim();if(!text)return;
-  const ps=DB.posts(),p=ps.find(x=>x.id===pid);if(!p)return;
-  const c={name:U.name,emoji:U.emoji,av:U.avatar,text};
-  (p.comments=p.comments||[]).push(c);DB.sP(ps);
-  const list=document.getElementById('cl-'+pid);
-  const ca=c.av?`<img src="${c.av}">`:(c.emoji||'🧑');
-  const dd=document.createElement('div');dd.className='citem';
-  dd.innerHTML=`<div class="cav">${ca}</div><div class="cbody"><div class="cnm">${esc(c.name)}</div><div class="ctxt">${esc(text)}</div></div>`;
-  list.appendChild(dd);inp.value='';
-  const pe=document.getElementById('pc-'+pid);
-  if(pe)pe.querySelectorAll('.abtn')[1].innerHTML=`💬 ${p.comments.length}`;
-  toast('留言成功 🌿');
-}
-function prevImgs(ev){Array.from(ev.target.files).forEach(f=>{const r=new FileReader();r.onload=e=>{imgs.push(e.target.result);renderPrev();};r.readAsDataURL(f);});ev.target.value='';}
-function renderPrev(){const c=document.getElementById('iprev');c.innerHTML='';imgs.forEach((s,i)=>{const d=document.createElement('div');d.className='prev-i';d.innerHTML=`<img src="${s}"><button class="pdel" onclick="delImg(${i})">✕</button>`;c.appendChild(d);});}
-function delImg(i){imgs.splice(i,1);renderPrev();}
-function pubPost(){
-  const body=document.getElementById('post-ta').value.trim();
-  if(!body&&!imgs.length){toast('请写点什么或上传图片～');return;}
-  const ps=DB.posts();
-  ps.unshift({id:'p_'+Date.now(),uid:U.id,name:U.name,emoji:U.emoji,av:U.avatar,city:U.city,age:U.age,body,imgs:[...imgs],likes:0,likedBy:[],comments:[],time:'刚刚',ts:Date.now()});
-  DB.sP(ps);document.getElementById('post-ta').value='';imgs=[];renderPrev();renderPosts();toast('🌿 动态已发布');
-}
-function renderDisc(ft){
-  let us=DB.users().filter(x=>x.id!==U.id);
-  if(ft==='female')us=us.filter(x=>x.gender==='female');
-  else if(ft==='male')us=us.filter(x=>x.gender==='male');
-  else if(ft==='new')us=[...us].sort((a,b)=>(b.joinTime||0)-(a.joinTime||0));
-  else us=[...us].sort((a,b)=>(b.likeCount||0)-(a.likeCount||0));
-  const g=document.getElementById('ugrid');g.innerHTML='';
-  if(!us.length){g.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="eico">🔍</div><p>暂无用户</p></div>';return;}
-  const fl=DB.flws(U.id);
-  us.forEach(u=>{
-    const fol=fl.includes(u.id);
-    const tags=(u.hobby||'').split(',').filter(Boolean).slice(0,3);
-    const d=document.createElement('div');d.className='ucard gc';
-    const ua=u.avatar?`<img src="${u.avatar}">`:(u.emoji||'🧑');
-    d.innerHTML=`<div class="ucav">${ua}</div><div class="ucnm">${esc(u.name)}</div><div class="ucsub">${u.age||'?'}岁 · ${u.city||'未知'}</div><div class="uctags">${tags.map(t=>`<span class="utag">${esc(t.trim())}</span>`).join('')||'<span class="utag">神秘</span>'}</div><button class="btn-flw ${fol?'on':''}" onclick="event.stopPropagation();toggleFlw(this,'${u.id}')">${fol?'✓ 已关注':'+ 关注'}</button>`;
-    d.onclick=()=>recordVisitTo(u.id);
-    g.appendChild(d);
+    ${u.bio?`<div class="uc-bio">${esc(u.bio)}</div>`:''}
+    ${tags.length?`<div class="uc-tags">${tags.map(t=>`<span class="utag">${esc(t.trim())}</span>`).join('')}</div>`:''}`;
+  const allMsgs=DB.msgs().filter(m=>m.uid===uid).sort((a,b)=>b.ts-a.ts);
+  const pe=document.getElementById('user-posts');pe.innerHTML='';
+  if(!allMsgs.length){pe.innerHTML='<div class="empty"><div class="empty-ic">💭</div><div class="empty-tx">还没有发过动态</div></div>';}
+  else allMsgs.forEach(m=>{
+    const d=document.createElement('div');d.className='post-card';
+    const coms=(m.coms||[]).map(c=>`<div class="pc-com"><span class="pc-cnm">${esc(c.n)}：</span>${esc(c.t)}</div>`).join('');
+    const body=m.type==='img'?`<div class="pc-imgs one"><img src="${m.imgUrl}" onclick="viewImg('${m.imgUrl}')"></div>`:`<div class="pc-text">${esc(m.text)}</div>`;
+    d.innerHTML=`${body}<div class="pc-meta">📍${m.city||''} · ${timeAgo(m.ts)}</div>
+      <div class="pc-coms"><div id="ucl-${m.id}">${coms}</div>
+        <div class="pc-add"><input class="pc-inp" id="uci-${m.id}" placeholder="写评论..."><button class="pc-btn" onclick="submitUserCom('${m.id}')">评论</button></div>
+      </div>`;
+    pe.appendChild(d);
   });
+  navTo('user');
 }
-function filt(t,btn){document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');renderDisc(t==='all'?null:t);}
-function toggleFlw(btn,uid){
-  const fl=DB.flws(U.id),i=fl.indexOf(uid);
-  if(i>=0){fl.splice(i,1);btn.classList.remove('on');btn.textContent='+ 关注';toast('已取消关注');}
-  else{fl.push(uid);btn.classList.add('on');btn.textContent='✓ 已关注';toast('💕 关注成功');}
-  DB.sFlws(U.id,fl);updateStats();
+function submitUserCom(mid){
+  if(!ME.name){navTo('setup');return;}
+  const inp=document.getElementById('uci-'+mid);const text=inp?.value.trim();if(!text)return;
+  const msgs=DB.msgs();const m=msgs.find(x=>x.id===mid);if(!m)return;
+  m.coms=m.coms||[];m.coms.push({n:ME.name,t:text,uid:ME.id});DB.saveMsgs(msgs);inp.value='';
+  const ul=document.getElementById('ucl-'+mid);
+  if(ul){const d=document.createElement('div');d.className='pc-com';d.innerHTML=`<span class="pc-cnm">${esc(ME.name)}：</span>${esc(text)}`;ul.appendChild(d);}
+  const cl=document.getElementById('coms-list-'+mid);
+  if(cl){const d=document.createElement('div');d.className='com-item';d.innerHTML=`<span class="com-name">${esc(ME.name)}：</span>${esc(text)}`;cl.appendChild(d);document.getElementById('coms-'+mid)?.classList.add('open');}
+  toast('评论成功！聊天室好友可见 💌');
 }
-function recordVisitTo(targetUid){
-  if(!targetUid||targetUid===U.id)return;
-  const vis=DB.vis(targetUid);
-  const ei=vis.findIndex(v=>v.uid===U.id);
-  const entry={uid:U.id,name:U.name,emoji:U.emoji,avatar:U.avatar,ts:Date.now()};
-  if(ei>=0)vis.splice(ei,1);
-  vis.unshift(entry);
-  DB.sVis(targetUid,vis.slice(0,20));
+function toggleFav(){
+  const now=!DB.fav();DB.saveFav(now);syncFavUI();
+  if(now){const bar=document.getElementById('fav-bar');bar.classList.add('on');setTimeout(()=>bar.classList.remove('on'),3500);}
+  else toast('已取消收藏推荐');
 }
-function renderMarry(){
-  const list=DB.marry().sort((a,b)=>b.ts-a.ts);
-  const c=document.getElementById('marry-list');c.innerHTML='';
-  if(!list.length){c.innerHTML='<div class="empty"><div class="eico">💌</div><p>还没有征婚帖，来发第一条吧～</p></div>';return;}
-  list.forEach(m=>{
-    const d=document.createElement('div');d.className='marry-card gc';
-    const av=m.av?`<img src="${m.av}">`:(m.emoji||'🧑');
-    d.innerHTML=`<div class="marry-hd"><div class="pav">${av}</div><div class="pmeta"><div class="pnm">${esc(m.name)}</div><div class="pinfo"><span class="marry-badge">${m.gender==='female'?'👩 女士':'👨 先生'}</span>${m.age?`<span class="ptag">${m.age}岁</span>`:''}${m.city?`<span class="ptag">📍${esc(m.city)}</span>`:''}</div></div></div><div class="marry-body">${esc(m.body)}</div><div class="marry-foot"><span class="marry-info">${m.time}</span></div>`;
-    c.appendChild(d);
-  });
+function openMenu(){document.getElementById('mask').classList.add('on');}
+function closeMask(){document.getElementById('mask').classList.remove('on');}
+function doExit(){
+  ME={id:'u'+Date.now(),name:'',age:'',city:'',job:'',gender:'',bio:'',hobby:'',avatar:null,emoji:'😊'};
+  DB.saveMe(null);gSel='';syncUI();toast('👋 已退出聊天室，欢迎再来');navTo('chat');
 }
-function pubMarry(){
-  const body=document.getElementById('marry-ta').value.trim();
-  if(!body){toast('请填写征婚内容');return;}
-  const list=DB.marry();
-  list.unshift({id:'m_'+Date.now(),uid:U.id,name:U.name,emoji:U.emoji,av:U.avatar,age:U.age,city:U.city,gender:U.gender||gender,body,time:'刚刚',ts:Date.now()});
-  DB.sMarry(list);document.getElementById('marry-ta').value='';renderMarry();toast('💌 征婚帖已发布');
+function prepSetup(){
+  document.getElementById('s-name').value=ME.name||'';document.getElementById('s-age').value=ME.age||'';
+  document.getElementById('s-city').value=ME.city||'';document.getElementById('s-job').value=ME.job||'';
+  document.getElementById('s-bio').value=ME.bio||'';document.getElementById('s-hobby').value=ME.hobby||'';
+  gSel=ME.gender||'';
+  document.querySelectorAll('.gb').forEach(b=>b.classList.toggle('on',(b.textContent.includes('女')&&gSel==='female')||(b.textContent.includes('先')&&gSel==='male')));
+  const av=document.getElementById('av-pick');av.innerHTML=ME.avatar?`<img src="${ME.avatar}">`:(ME.emoji||'😊');
 }
-function loadProf(){
-  document.getElementById('e-nm').value=U.name||'';
-  document.getElementById('e-age').value=U.age||'';
-  document.getElementById('e-city').value=U.city||'';
-  document.getElementById('e-job').value=U.job||'';
-  document.getElementById('e-bio').value=U.bio||'';
-  document.getElementById('e-hob').value=U.hobby||'';
-  document.getElementById('p-old').value='';
-  document.getElementById('p-new').value='';
-  refreshHero();updateStats();renderMyPosts();renderVisitors();renderFavs();
+function setGender(btn,g){gSel=g;document.querySelectorAll('.gb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+function doSaveSetup(){
+  const name=document.getElementById('s-name').value.trim();if(!name){toast('请填写昵称');return;}
+  ME.name=name;ME.age=document.getElementById('s-age').value;ME.city=document.getElementById('s-city').value;
+  ME.job=document.getElementById('s-job').value.trim();ME.bio=document.getElementById('s-bio').value.trim();
+  ME.hobby=document.getElementById('s-hobby').value.trim();ME.gender=gSel;
+  ME.emoji=gSel==='female'?'👩':gSel==='male'?'👨':'😊';
+  DB.saveMe(ME);const us=DB.users();us[ME.id]=ME;DB.saveUsers(us);
+  syncUI();toast('🎉 资料已保存，欢迎加入！');navTo('chat');
 }
-function refreshHero(){
-  document.getElementById('p-name').textContent=U.name;
-  document.getElementById('p-bio').textContent=U.bio||'这个人还没留下什么...';
-  const el=document.getElementById('p-av');
-  el.innerHTML=U.avatar?`<img src="${U.avatar}">`:(U.emoji||'🧑');
-}
-function updateStats(){
-  document.getElementById('s-post').textContent=DB.posts().filter(x=>x.uid===U.id).length;
-  document.getElementById('s-like').textContent=(DB.users().find(x=>x.id===U.id)||U).likeCount||0;
-  document.getElementById('s-flw').textContent=DB.flws(U.id).length;
-  document.getElementById('s-fav').textContent=DB.favs(U.id).length;
-}
-function renderVisitors(){
-  const vis=DB.vis(U.id);
-  const c=document.getElementById('vis-list');c.innerHTML='';
-  if(!vis.length){c.innerHTML='<div class="empty" style="padding:18px"><div class="eico">👀</div><p>还没有人来看过你</p></div>';return;}
-  vis.slice(0,10).forEach(v=>{
-    const d=document.createElement('div');d.className='vis-item';
-    const av=v.avatar?`<img src="${v.avatar}">`:(v.emoji||'🧑');
-    d.innerHTML=`<div class="vis-av">${av}</div><div class="vis-name">${esc(v.name)}</div><div class="vis-time">${timeAgo(v.ts)}</div>`;
-    c.appendChild(d);
-  });
-}
-function renderFavs(){
-  const favIds=DB.favs(U.id);
-  const c=document.getElementById('fav-list');c.innerHTML='';
-  if(!favIds.length){c.innerHTML='<div class="empty" style="padding:18px"><div class="eico">⭐</div><p>还没有收藏任何动态</p></div>';return;}
-  const ps=DB.posts();
-  favIds.map(id=>ps.find(p=>p.id===id)).filter(Boolean).forEach(p=>c.appendChild(mkPost(p)));
-}
-function renderMyPosts(){
-  const ps=DB.posts().filter(x=>x.uid===U.id).sort((a,b)=>b.ts-a.ts);
-  const c=document.getElementById('my-posts');c.innerHTML='';
-  if(!ps.length){c.innerHTML='<div class="empty" style="padding:18px"><div class="eico">📜</div><p>还没有发过动态</p></div>';return;}
-  ps.forEach(p=>c.appendChild(mkPost(p)));
-}
-function saveProf(){
-  const nm=_v('e-nm');if(!nm){toast('昵称不能为空');return;}
-  U.name=nm;U.age=parseInt(_v('e-age'))||U.age;U.city=_v('e-city');U.job=_v('e-job');
-  U.bio=document.getElementById('e-bio').value.trim();U.hobby=_v('e-hob');
-  syncU();refreshNav();refreshHero();toast('✅ 资料已保存');
-}
-function changePwd(){
-  const o=_v('p-old'),n=_v('p-new');
-  if(!o||!n){toast('请填写当前密码和新密码');return;}
-  if(o!==U.pwd){toast('当前密码不正确');return;}
-  if(n.length<6){toast('新密码至少6位');return;}
-  U.pwd=n;syncU();
-  document.getElementById('p-old').value='';
-  document.getElementById('p-new').value='';
-  toast('🔒 密码修改成功');
-}
-function pickAv(){document.getElementById('av-inp').click();}
-function applyAv(ev){
+function triggerAv(){document.getElementById('av-file').click();}
+function applyAvatar(ev){
   const file=ev.target.files[0];if(!file)return;
   const img=new Image(),r=new FileReader();
-  r.onload=e=>{img.onload=()=>{const cv=document.createElement('canvas');cv.width=cv.height=200;const ctx=cv.getContext('2d'),m=Math.min(img.width,img.height);ctx.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,200,200);U.avatar=cv.toDataURL('image/jpeg',.75);syncU();refreshNav();refreshHero();toast('🪬 头像已更新');};img.src=e.target.result;};
-  r.readAsDataURL(file);ev.target.value='';
+  r.onload=e=>{img.onload=()=>{
+    const cv=document.createElement('canvas');cv.width=cv.height=200;
+    const ctx=cv.getContext('2d'),m=Math.min(img.width,img.height);
+    ctx.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,200,200);
+    ME.avatar=cv.toDataURL('image/jpeg',.76);ME.emoji='';DB.saveMe(ME);
+    document.getElementById('av-pick').innerHTML=`<img src="${ME.avatar}">`;syncUI();toast('🖼 头像已更新');
+  };img.src=e.target.result;};r.readAsDataURL(file);ev.target.value='';
 }
+function navTo(pageId){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pg-'+pageId).classList.add('on');
+  if(pageId==='setup')prepSetup();if(pageId==='chat')scrollToBottom();
+}
+function scrollToBottom(){setTimeout(()=>{const b=document.getElementById('chat-msgs');if(b)b.scrollTop=b.scrollHeight;},60);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function _v(id){return document.getElementById(id).value.trim();}
-function _err(id,m){document.getElementById(id).textContent=m;}
+function formatTime(ts){if(!ts)return'';const d=new Date(ts);return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
+function timeAgo(ts){if(!ts)return'';const s=Math.floor((Date.now()-ts)/1000);if(s<60)return'刚刚';if(s<3600)return Math.floor(s/60)+'分钟前';if(s<86400)return Math.floor(s/3600)+'小时前';return Math.floor(s/86400)+'天前';}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600);}
-function bigImg(src){document.getElementById('imodal-img').src=src;document.getElementById('imodal').classList.add('on');}
-function timeAgo(ts){if(!ts)return'';const d=Math.floor((Date.now()-ts)/1000);if(d<60)return'刚刚';if(d<3600)return Math.floor(d/60)+'分钟前';if(d<86400)return Math.floor(d/3600)+'小时前';return Math.floor(d/86400)+'天前';}
+function viewImg(src){document.getElementById('img-view-src').src=src;document.getElementById('img-view').classList.add('on');}
 </script>
 </body>
 </html>

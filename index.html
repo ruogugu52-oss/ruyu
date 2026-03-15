@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>如玉社区</title>
+<script src="https://imgcache.qq.com/qcloud/tcbjs/1.10.0/tcb.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;font-family:-apple-system,'PingFang SC','Noto Sans SC',sans-serif;}
@@ -19,7 +20,7 @@ body{background:#fff5f8;}
 .ct-star{font-size:22px;line-height:1;background:none;border:none;cursor:pointer;padding:4px;}
 .ct-city{font-size:15px;font-weight:600;color:#07c160;background:none;border:none;cursor:pointer;font-family:inherit;padding:5px 6px;}
 .chat-msgs{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 12px 10px;display:flex;flex-direction:column;gap:13px;background:#fff5f8;}
-.time-sep{text-align:center;font-size:11px;color:#c0a8b4;background:rgba(255,255,255,.65);border-radius:10px;padding:3px 12px;margin:0 auto;pointer-events:none;}
+.time-sep{text-align:center;font-size:11px;color:#c0a8b4;background:rgba(255,255,255,.65);border-radius:10px;padding:3px 12px;margin:0 auto;}
 .mrow{display:flex;gap:9px;align-items:flex-start;}
 .mrow.me{flex-direction:row-reverse;}
 .m-av{width:43px;height:43px;border-radius:50%;flex-shrink:0;overflow:hidden;cursor:pointer;border:2.5px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.13);background:#ffccd8;display:flex;align-items:center;justify-content:center;font-size:20px;}
@@ -42,7 +43,7 @@ body{background:#fff5f8;}
 .com-inp::placeholder{color:#f0a8bc;}
 .com-btn{padding:5px 13px;background:#e02050;color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:12px;cursor:pointer;}
 .chat-bar{flex-shrink:0;padding:9px 12px 16px;background:#fff;border-top:1px solid #ffe4ee;display:flex;align-items:center;gap:8px;}
-.bar-cam{width:36px;height:36px;border-radius:50%;background:#f6f0f4;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px;color:#999;}
+.bar-cam{width:36px;height:36px;border-radius:50%;background:#f6f0f4;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .bar-inp{flex:1;padding:9px 16px;border:1.5px solid #ffdcea;border-radius:22px;background:#fff8fa;font-family:inherit;font-size:14px;color:#2a0814;outline:none;min-height:40px;max-height:80px;resize:none;line-height:1.4;}
 .bar-inp::placeholder{color:#ddaabc;}.bar-inp:focus{border-color:#ff6b9d;}
 .bar-join{padding:10px 20px;background:#ff6b9d;color:#fff;border:none;border-radius:22px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;box-shadow:0 3px 12px rgba(255,107,157,.36);transition:transform .13s;}
@@ -86,7 +87,7 @@ body{background:#fff5f8;}
 .post-card{background:#fff;border-radius:15px;padding:13px;margin-bottom:10px;box-shadow:0 2px 11px rgba(255,107,157,.06);}
 .pc-text{font-size:14px;line-height:1.75;color:#2a0814;white-space:pre-wrap;margin-bottom:8px;}
 .pc-imgs{display:grid;gap:3px;border-radius:10px;overflow:hidden;margin-bottom:8px;}
-.pc-imgs.one{grid-template-columns:1fr;}.pc-imgs.two{grid-template-columns:1fr 1fr;}
+.pc-imgs.one{grid-template-columns:1fr;}
 .pc-imgs img{width:100%;aspect-ratio:4/3;object-fit:cover;cursor:pointer;}
 .pc-meta{font-size:11px;color:#c0a8b4;margin-bottom:8px;}
 .pc-coms{padding-top:9px;border-top:1px solid #ffe4ee;}
@@ -109,6 +110,10 @@ body{background:#fff5f8;}
 .fav-bar.on{display:flex;animation:favIn .26s ease;}
 @keyframes favIn{from{opacity:0;transform:translateX(-50%) translateY(-24px)}to{opacity:1;transform:translateX(-50%) translateY(-14px)}}
 .fb-ic{font-size:22px;}.fb-main{font-size:14px;font-weight:500;color:#111;}.fb-sub{font-size:11px;color:#c0a8b4;margin-top:1px;}
+.loading{position:fixed;inset:0;background:#fff5f8;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
+.loading-ic{font-size:44px;animation:pulse 1.2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.loading-tx{font-size:14px;color:#c0a8b4;letter-spacing:1px;}
 .empty{text-align:center;padding:28px 20px;color:#ddaabc;}
 .empty-ic{font-size:28px;margin-bottom:6px;opacity:.38;}.empty-tx{font-size:13px;}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(36px);background:rgba(36,6,14,.87);color:#fff;padding:10px 22px;border-radius:18px;font-size:13px;z-index:999;transition:transform .18s;pointer-events:none;backdrop-filter:blur(8px);}
@@ -121,6 +126,10 @@ body{background:#fff5f8;}
 </style>
 </head>
 <body>
+<div class="loading" id="loading">
+  <div class="loading-ic">🪬</div>
+  <div class="loading-tx">如玉社区 连接中...</div>
+</div>
 <div id="root">
   <div class="pg on" id="pg-chat">
     <div class="chat-top">
@@ -133,13 +142,13 @@ body{background:#fff5f8;}
       </div>
       <div class="ct-title">如玉公益婚恋</div>
       <div class="ct-right">
-        <button class="ct-star" id="ct-star" onclick="toggleFav()" title="收藏">☆</button>
+        <button class="ct-star" id="ct-star" onclick="toggleFav()">☆</button>
         <button class="ct-city" id="ct-city" onclick="ME.name?openMenu():navTo('setup')"></button>
       </div>
     </div>
     <div class="chat-msgs" id="chat-msgs"></div>
     <div class="chat-bar">
-      <label class="bar-cam" title="发送图片">
+      <label class="bar-cam">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="13" r="3"/><path d="M20 7h-3.5l-1.5-2h-6L7.5 7H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1z"/>
         </svg>
@@ -187,7 +196,7 @@ body{background:#fff5f8;}
               <button class="gb" onclick="setGender(this,'male')">👨 先生</button>
             </div>
           </div>
-          <div><div class="fl">个人简介</div><textarea class="fta" id="s-bio" placeholder="简单介绍一下自己，让有缘人了解你～"></textarea></div>
+          <div><div class="fl">个人简介</div><textarea class="fta" id="s-bio" placeholder="简单介绍一下自己～"></textarea></div>
           <div><div class="fl">兴趣爱好（逗号分隔）</div><input class="fi" id="s-hobby" placeholder="旅行, 读书, 烹饪..."></div>
         </div>
       </div>
@@ -212,7 +221,7 @@ body{background:#fff5f8;}
     <div class="ms-hint">如玉社区</div>
     <div class="ms-list">
       <button class="ms-btn" onclick="closeMask();navTo('setup')"><span class="ms-ic">✏️</span>编辑我的资料</button>
-      <button class="ms-btn" id="ms-fav" onclick="closeMask();toggleFav()"><span class="ms-ic" id="ms-fav-ic">☆</span><span id="ms-fav-tx">收藏到屏幕推荐</span></button>
+      <button class="ms-btn" onclick="closeMask();toggleFav()"><span class="ms-ic" id="ms-fav-ic">☆</span><span id="ms-fav-tx">收藏到屏幕推荐</span></button>
       <button class="ms-btn danger" onclick="closeMask();doExit()"><span class="ms-ic">🚪</span>退出聊天室</button>
       <button class="ms-btn cancel" onclick="closeMask()"><span class="ms-ic" style="opacity:.35">✕</span>取消</button>
     </div>
@@ -226,214 +235,339 @@ body{background:#fff5f8;}
 <div id="toast"></div>
 <div class="img-view" id="img-view" onclick="this.classList.remove('on')"><img id="img-view-src" src="" alt=""></div>
 <script>
-const DB={
-  me:()=>JSON.parse(localStorage.getItem('ruyu_me')||'null'),
-  saveMe:(v)=>localStorage.setItem('ruyu_me',JSON.stringify(v)),
-  msgs:()=>JSON.parse(localStorage.getItem('ruyu_msg')||'[]'),
-  saveMsgs:(v)=>localStorage.setItem('ruyu_msg',JSON.stringify(v)),
-  users:()=>JSON.parse(localStorage.getItem('ruyu_usr')||'{}'),
-  saveUsers:(v)=>localStorage.setItem('ruyu_usr',JSON.stringify(v)),
-  fav:()=>localStorage.getItem('ruyu_fav')==='1',
-  saveFav:(v)=>localStorage.setItem('ruyu_fav',v?'1':'0'),
-};
-let ME=DB.me()||{id:'u'+Date.now(),name:'',age:'',city:'',job:'',gender:'',bio:'',hobby:'',avatar:null,emoji:'😊'};
-let gSel=ME.gender||'';
-function seedDemo(){
-  if(DB.msgs().length)return;
-  DB.saveUsers({
-    d1:{id:'d1',name:'婉清',emoji:'👩',avatar:null,gender:'female',age:28,city:'杭州',job:'教师',bio:'喜欢安静的生活，爱读书旅行，期待遇见踏实上进的人。',hobby:'读书,旅行,茶艺'},
-    d2:{id:'d2',name:'子谦',emoji:'👨',avatar:null,gender:'male',age:31,city:'成都',job:'建筑师',bio:'性格沉稳，喜欢登山摄影，希望找到一起慢慢生活的人。',hobby:'摄影,登山,美食'},
-    d3:{id:'d3',name:'若初',emoji:'👩',avatar:null,gender:'female',age:26,city:'北京',job:'设计师',bio:'热爱生活，喜欢做手工和花艺，向往简单的幸福。',hobby:'花艺,手工,瑜伽'},
-    d4:{id:'d4',name:'明远',emoji:'👨',avatar:null,gender:'male',age:33,city:'上海',job:'医生',bio:'工作忙碌，向往烟火气的温暖，希望有人等我回家。',hobby:'烹饪,读书,跑步'},
-    d5:{id:'d5',name:'思宁',emoji:'👩',avatar:null,gender:'female',age:29,city:'南京',job:'律师',bio:'独立而温柔，期待认真对待感情的人。',hobby:'音乐,电影,烘焙'},
-  });
-  const n=Date.now();
-  DB.saveMsgs([
-    {id:'m1',uid:'d1',name:'婉清',emoji:'👩',av:null,city:'杭州',type:'text',text:'今天真是倒霉的一天',ts:n-7200000,coms:[]},
-    {id:'m2',uid:'d4',name:'明远',emoji:'👨',av:null,city:'上海',type:'text',text:'外滩晚上的风很大、夜景不错 👍',ts:n-6800000,coms:[]},
-    {id:'m3',uid:'d2',name:'子谦',emoji:'👨',av:null,city:'成都',type:'text',text:'我想有一个不太好看的女朋友',ts:n-6400000,coms:[]},
-    {id:'m4',uid:'d3',name:'若初',emoji:'👩',av:null,city:'北京',type:'text',text:'对不起，我太好看啦。我们不合适 😄',ts:n-6000000,coms:[]},
-    {id:'m5',uid:'d5',name:'思宁',emoji:'👩',av:null,city:'南京',type:'text',text:'估计没人愿意当不太好看的人',ts:n-5600000,coms:[]},
-    {id:'m6',uid:'d2',name:'子谦',emoji:'👨',av:null,city:'成都',type:'text',text:'今天天气真好 😄',ts:n-5200000,coms:[]},
-    {id:'m7',uid:'d1',name:'婉清',emoji:'👩',av:null,city:'杭州',type:'text',text:'小人得志 👀',ts:n-4800000,coms:[]},
-    {id:'m8',uid:'d4',name:'明远',emoji:'👨',av:null,city:'上海',type:'img',imgUrl:'https://picsum.photos/seed/mtn10/600/400',ts:n-4400000,coms:[]},
-    {id:'m9',uid:'d2',name:'子谦',emoji:'👨',av:null,city:'成都',type:'text',text:'@ 若初、快点走、前方的风景很美',ts:n-4000000,coms:[]},
-    {id:'m10',uid:'d3',name:'若初',emoji:'👩',av:null,city:'北京',type:'text',text:'@ 子谦，我才到这里',ts:n-3600000,coms:[]},
-    {id:'m11',uid:'d5',name:'思宁',emoji:'👩',av:null,city:'南京',type:'img',imgUrl:'https://picsum.photos/seed/lk10/600/400',ts:n-3200000,coms:[]},
-  ]);
+const ENV_ID = 'ruyu-5glawvibc792700f';
+let app, db, ME, gSel = '';
+
+// 初始化腾讯云
+async function initCloud() {
+  try {
+    app = tcb.init({ env: ENV_ID });
+    await app.auth().anonymousAuthProvider().signIn();
+    db = app.database();
+    const saved = localStorage.getItem('ruyu_me');
+    ME = saved ? JSON.parse(saved) : { id: 'u' + Date.now(), name: '', age: '', city: '', job: '', gender: '', bio: '', hobby: '', avatar: null, emoji: '😊' };
+    gSel = ME.gender || '';
+    document.getElementById('loading').style.display = 'none';
+    syncUI(); syncFavUI();
+    await loadMsgs();
+    listenMsgs();
+  } catch(e) {
+    console.error(e);
+    // 降级到本地模式
+    ME = JSON.parse(localStorage.getItem('ruyu_me') || 'null') || { id: 'u' + Date.now(), name: '', age: '', city: '', job: '', gender: '', bio: '', hobby: '', avatar: null, emoji: '😊' };
+    gSel = ME.gender || '';
+    document.getElementById('loading').style.display = 'none';
+    syncUI(); syncFavUI();
+    toast('⚠️ 云端连接失败，本地模式运行');
+  }
 }
-seedDemo();
-renderAllMsgs();
-syncUI();
-syncFavUI();
-function syncUI(){
-  const j=document.getElementById('bar-join'),s=document.getElementById('bar-send'),i=document.getElementById('bar-inp'),c=document.getElementById('ct-city');
-  if(ME.name){j.style.display='none';s.style.display='flex';i.placeholder='说点什么...';c.textContent=ME.city||'';}
-  else{j.style.display='block';s.style.display='none';i.placeholder='上个聊天';c.textContent='';}
+
+// 加载历史消息
+async function loadMsgs() {
+  try {
+    const res = await db.collection('chat_msgs')
+      .orderBy('ts', 'asc')
+      .limit(100)
+      .get();
+    const box = document.getElementById('chat-msgs');
+    box.innerHTML = '';
+    (res.data || []).forEach(m => box.appendChild(buildMsgEl(m)));
+    scrollToBottom();
+  } catch(e) { console.error('loadMsgs', e); }
 }
-function syncFavUI(){
-  const f=DB.fav();
-  document.getElementById('ct-star').textContent=f?'⭐':'☆';
-  document.getElementById('ms-fav-ic').textContent=f?'⭐':'☆';
-  document.getElementById('ms-fav-tx').textContent=f?'取消推荐收藏':'收藏到屏幕推荐';
+
+// 实时监听新消息
+function listenMsgs() {
+  try {
+    db.collection('chat_msgs')
+      .orderBy('ts', 'desc')
+      .limit(1)
+      .watch({
+        onChange: snapshot => {
+          const docs = snapshot.docChanges || [];
+          docs.forEach(change => {
+            if (change.dataType === 'add') {
+              const m = change.doc;
+              if (document.getElementById('mrow-' + m._id)) return;
+              const box = document.getElementById('chat-msgs');
+              box.appendChild(buildMsgEl({ ...m, id: m._id }));
+              scrollToBottom();
+            }
+            if (change.dataType === 'update') {
+              const m = change.doc;
+              const el = document.getElementById('mrow-' + m._id);
+              if (el) {
+                const newEl = buildMsgEl({ ...m, id: m._id });
+                el.replaceWith(newEl);
+              }
+            }
+          });
+        },
+        onError: e => console.error('watch error', e)
+      });
+  } catch(e) { console.error('listenMsgs', e); }
 }
-function renderAllMsgs(){
-  const box=document.getElementById('chat-msgs');box.innerHTML='';
-  DB.msgs().forEach(m=>box.appendChild(buildMsgEl(m)));scrollToBottom();
+
+function syncUI() {
+  const j = document.getElementById('bar-join'), s = document.getElementById('bar-send');
+  const i = document.getElementById('bar-inp'), c = document.getElementById('ct-city');
+  if (ME && ME.name) {
+    j.style.display = 'none'; s.style.display = 'flex';
+    i.placeholder = '说点什么...'; c.textContent = ME.city || '';
+  } else {
+    j.style.display = 'block'; s.style.display = 'none';
+    i.placeholder = '上个聊天'; c.textContent = '';
+  }
 }
-function buildMsgEl(m){
-  if(m.type==='sys'){const d=document.createElement('div');d.className='time-sep';d.textContent=m.text;return d;}
-  const isMe=m.uid===ME.id;
-  const wrap=document.createElement('div');wrap.className='mrow'+(isMe?' me':'');wrap.id='mrow-'+m.id;
-  const avHTML=m.av?`<img src="${m.av}">`:(m.emoji||'😊');
-  const timeStr=formatTime(m.ts);
-  let contentHTML=m.type==='img'?`<div class="m-img" onclick="viewImg('${m.imgUrl}')"><img src="${m.imgUrl}" loading="lazy"></div>`:`<div class="bubble">${esc(m.text)}</div>`;
-  const comsHTML=(m.coms||[]).map(c=>`<div class="com-item"><span class="com-name">${esc(c.n)}：</span>${esc(c.t)}</div>`).join('');
-  wrap.innerHTML=`
+
+function syncFavUI() {
+  const f = localStorage.getItem('ruyu_fav') === '1';
+  document.getElementById('ct-star').textContent = f ? '⭐' : '☆';
+  document.getElementById('ms-fav-ic').textContent = f ? '⭐' : '☆';
+  document.getElementById('ms-fav-tx').textContent = f ? '取消推荐收藏' : '收藏到屏幕推荐';
+}
+
+function buildMsgEl(m) {
+  const id = m.id || m._id;
+  const isMe = id && ME && (m.uid === ME.id);
+  const wrap = document.createElement('div');
+  wrap.className = 'mrow' + (isMe ? ' me' : '');
+  wrap.id = 'mrow-' + id;
+  const avHTML = m.av ? `<img src="${m.av}">` : (m.emoji || '😊');
+  const timeStr = formatTime(m.ts);
+  let contentHTML = m.type === 'img'
+    ? `<div class="m-img" onclick="viewImg('${m.imgUrl}')"><img src="${m.imgUrl}" loading="lazy"></div>`
+    : `<div class="bubble">${esc(m.text)}</div>`;
+  const comsHTML = (m.coms || []).map(c =>
+    `<div class="com-item"><span class="com-name">${esc(c.n)}：</span>${esc(c.t)}</div>`
+  ).join('');
+  wrap.innerHTML = `
     <div class="m-av" onclick="openUser('${m.uid}')">${avHTML}</div>
     <div class="m-col">
-      <div class="m-meta"><span>${esc(m.name)}</span>${m.city?`<span style="font-size:10px;color:#d8b0c0">${m.city}</span>`:''}<span class="m-time">${timeStr}</span></div>
+      <div class="m-meta"><span>${esc(m.name)}</span>${m.city ? `<span style="font-size:10px;color:#d8b0c0">${m.city}</span>` : ''}<span class="m-time">${timeStr}</span></div>
       ${contentHTML}
-      <div class="coms ${comsHTML?'open':''}" id="coms-${m.id}">
-        <div id="coms-list-${m.id}">${comsHTML}</div>
-        <div class="com-add" id="com-add-${m.id}" style="display:none">
-          <input class="com-inp" id="com-inp-${m.id}" placeholder="写评论...">
-          <button class="com-btn" onclick="submitCom('${m.id}')">发送</button>
+      <div class="coms ${comsHTML ? 'open' : ''}" id="coms-${id}">
+        <div id="coms-list-${id}">${comsHTML}</div>
+        <div class="com-add" id="com-add-${id}" style="display:none">
+          <input class="com-inp" id="com-inp-${id}" placeholder="写评论...">
+          <button class="com-btn" onclick="submitCom('${id}')">发送</button>
         </div>
       </div>
     </div>`;
-  const bub=wrap.querySelector('.bubble');
-  if(bub)bub.onclick=()=>toggleComBox(m.id);
+  const bub = wrap.querySelector('.bubble');
+  if (bub) bub.onclick = () => toggleComBox(id);
   return wrap;
 }
-function toggleComBox(mid){
-  if(!ME.name){navTo('setup');return;}
-  const box=document.getElementById('coms-'+mid),add=document.getElementById('com-add-'+mid);if(!box||!add)return;
-  box.classList.add('open');add.style.display=add.style.display==='none'?'flex':'none';
-  if(add.style.display==='flex')document.getElementById('com-inp-'+mid)?.focus();
+
+function toggleComBox(mid) {
+  if (!ME || !ME.name) { navTo('setup'); return; }
+  const box = document.getElementById('coms-' + mid), add = document.getElementById('com-add-' + mid);
+  if (!box || !add) return;
+  box.classList.add('open');
+  add.style.display = add.style.display === 'none' ? 'flex' : 'none';
+  if (add.style.display === 'flex') document.getElementById('com-inp-' + mid)?.focus();
 }
-function submitCom(mid){
-  if(!ME.name){navTo('setup');return;}
-  const inp=document.getElementById('com-inp-'+mid);const text=inp?.value.trim();if(!text)return;
-  const msgs=DB.msgs();const m=msgs.find(x=>x.id===mid);if(!m)return;
-  m.coms=m.coms||[];m.coms.push({n:ME.name,t:text,uid:ME.id});DB.saveMsgs(msgs);
-  inp.value='';
-  const list=document.getElementById('coms-list-'+mid);
-  if(list){const d=document.createElement('div');d.className='com-item';d.innerHTML=`<span class="com-name">${esc(ME.name)}：</span>${esc(text)}`;list.appendChild(d);}
-  document.getElementById('com-add-'+mid).style.display='none';
-  toast('评论成功！聊天室好友可见 💌');
+
+async function submitCom(mid) {
+  if (!ME || !ME.name) { navTo('setup'); return; }
+  const inp = document.getElementById('com-inp-' + mid);
+  const text = inp?.value.trim(); if (!text) return;
+  try {
+    const res = await db.collection('chat_msgs').doc(mid).get();
+    const m = res.data[0]; if (!m) return;
+    const coms = m.coms || [];
+    coms.push({ n: ME.name, t: text, uid: ME.id });
+    await db.collection('chat_msgs').doc(mid).update({ coms });
+    inp.value = '';
+    const list = document.getElementById('coms-list-' + mid);
+    if (list) { const d = document.createElement('div'); d.className = 'com-item'; d.innerHTML = `<span class="com-name">${esc(ME.name)}：</span>${esc(text)}`; list.appendChild(d); }
+    document.getElementById('com-add-' + mid).style.display = 'none';
+    toast('评论成功！聊天室好友可见 💌');
+  } catch(e) { toast('评论失败，请重试'); }
 }
-function handleSend(){
-  if(!ME.name){navTo('setup');return;}
-  const inp=document.getElementById('bar-inp');const text=inp.value.trim();if(!text)return;
-  appendMsg({id:'m'+Date.now(),uid:ME.id,name:ME.name,emoji:ME.emoji||'😊',av:ME.avatar,city:ME.city,type:'text',text,ts:Date.now(),coms:[]});
-  inp.value='';
+
+async function handleSend() {
+  if (!ME || !ME.name) { navTo('setup'); return; }
+  const inp = document.getElementById('bar-inp');
+  const text = inp.value.trim(); if (!text) return;
+  inp.value = '';
+  try {
+    await db.collection('chat_msgs').add({
+      uid: ME.id, name: ME.name, emoji: ME.emoji || '😊',
+      av: ME.avatar, city: ME.city, type: 'text', text,
+      ts: Date.now(), coms: []
+    });
+  } catch(e) { toast('发送失败，请重试'); inp.value = text; }
 }
-function sendImage(ev){
-  if(!ME.name){navTo('setup');return;}
-  const file=ev.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{const img=new Image();img.onload=()=>{
-    const cv=document.createElement('canvas');const maxW=600,r=Math.min(maxW/img.width,1);cv.width=img.width*r;cv.height=img.height*r;cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
-    appendMsg({id:'m'+Date.now(),uid:ME.id,name:ME.name,emoji:ME.emoji||'😊',av:ME.avatar,city:ME.city,type:'img',imgUrl:cv.toDataURL('image/jpeg',.82),ts:Date.now(),coms:[]});
-  };img.src=e.target.result;};reader.readAsDataURL(file);ev.target.value='';
+
+async function sendImage(ev) {
+  if (!ME || !ME.name) { navTo('setup'); return; }
+  const file = ev.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async e => {
+    const img = new Image(); img.onload = async () => {
+      const cv = document.createElement('canvas');
+      const maxW = 600, r = Math.min(maxW / img.width, 1);
+      cv.width = img.width * r; cv.height = img.height * r;
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      const imgUrl = cv.toDataURL('image/jpeg', .8);
+      try {
+        await db.collection('chat_msgs').add({
+          uid: ME.id, name: ME.name, emoji: ME.emoji || '😊',
+          av: ME.avatar, city: ME.city, type: 'img', imgUrl,
+          ts: Date.now(), coms: []
+        });
+      } catch(e) { toast('图片发送失败'); }
+    }; img.src = e.target.result;
+  }; reader.readAsDataURL(file); ev.target.value = '';
 }
-function appendMsg(msg){
-  const msgs=DB.msgs();msgs.push(msg);DB.saveMsgs(msgs);
-  const box=document.getElementById('chat-msgs');box.appendChild(buildMsgEl(msg));scrollToBottom();
-}
-function openUser(uid){
-  const us=DB.users();const u=us[uid]||(uid===ME.id?ME:null);if(!u)return;
-  document.getElementById('ut-title').textContent=u.name||'用户资料';
-  const tags=(u.hobby||'').split(',').filter(Boolean);
-  document.getElementById('user-card').innerHTML=`
-    <div class="uc-top">
-      <div class="uc-av">${u.avatar?`<img src="${u.avatar}">`:(u.emoji||'😊')}</div>
-      <div>
-        <div class="uc-name">${esc(u.name||'匿名用户')}</div>
-        <div class="uc-info">${u.age?u.age+'岁':''}${u.city?' · '+u.city:''}${u.job?' · '+u.job:''} ${u.gender==='female'?'👩':u.gender==='male'?'👨':''}</div>
+async function openUser(uid) {
+  try {
+    const res = await db.collection('users').where({ id: uid }).limit(1).get();
+    const u = res.data[0] || (uid === ME.id ? ME : null);
+    if (!u) return;
+    document.getElementById('ut-title').textContent = u.name || '用户资料';
+    const tags = (u.hobby || '').split(',').filter(Boolean);
+    document.getElementById('user-card').innerHTML = `
+      <div class="uc-top">
+        <div class="uc-av">${u.avatar ? `<img src="${u.avatar}">` : (u.emoji || '😊')}</div>
+        <div>
+          <div class="uc-name">${esc(u.name || '匿名用户')}</div>
+          <div class="uc-info">${u.age ? u.age + '岁' : ''}${u.city ? ' · ' + u.city : ''}${u.job ? ' · ' + u.job : ''} ${u.gender === 'female' ? '👩' : u.gender === 'male' ? '👨' : ''}</div>
+        </div>
       </div>
-    </div>
-    ${u.bio?`<div class="uc-bio">${esc(u.bio)}</div>`:''}
-    ${tags.length?`<div class="uc-tags">${tags.map(t=>`<span class="utag">${esc(t.trim())}</span>`).join('')}</div>`:''}`;
-  const allMsgs=DB.msgs().filter(m=>m.uid===uid).sort((a,b)=>b.ts-a.ts);
-  const pe=document.getElementById('user-posts');pe.innerHTML='';
-  if(!allMsgs.length){pe.innerHTML='<div class="empty"><div class="empty-ic">💭</div><div class="empty-tx">还没有发过动态</div></div>';}
-  else allMsgs.forEach(m=>{
-    const d=document.createElement('div');d.className='post-card';
-    const coms=(m.coms||[]).map(c=>`<div class="pc-com"><span class="pc-cnm">${esc(c.n)}：</span>${esc(c.t)}</div>`).join('');
-    const body=m.type==='img'?`<div class="pc-imgs one"><img src="${m.imgUrl}" onclick="viewImg('${m.imgUrl}')"></div>`:`<div class="pc-text">${esc(m.text)}</div>`;
-    d.innerHTML=`${body}<div class="pc-meta">📍${m.city||''} · ${timeAgo(m.ts)}</div>
-      <div class="pc-coms"><div id="ucl-${m.id}">${coms}</div>
-        <div class="pc-add"><input class="pc-inp" id="uci-${m.id}" placeholder="写评论..."><button class="pc-btn" onclick="submitUserCom('${m.id}')">评论</button></div>
-      </div>`;
-    pe.appendChild(d);
-  });
-  navTo('user');
+      ${u.bio ? `<div class="uc-bio">${esc(u.bio)}</div>` : ''}
+      ${tags.length ? `<div class="uc-tags">${tags.map(t => `<span class="utag">${esc(t.trim())}</span>`).join('')}</div>` : ''}`;
+    const msgsRes = await db.collection('chat_msgs').where({ uid }).orderBy('ts', 'desc').limit(20).get();
+    const pe = document.getElementById('user-posts'); pe.innerHTML = '';
+    if (!msgsRes.data.length) {
+      pe.innerHTML = '<div class="empty"><div class="empty-ic">💭</div><div class="empty-tx">还没有发过动态</div></div>';
+    } else {
+      msgsRes.data.forEach(m => {
+        const mid = m._id;
+        const d = document.createElement('div'); d.className = 'post-card';
+        const coms = (m.coms || []).map(c => `<div class="pc-com"><span class="pc-cnm">${esc(c.n)}：</span>${esc(c.t)}</div>`).join('');
+        const body = m.type === 'img'
+          ? `<div class="pc-imgs one"><img src="${m.imgUrl}" onclick="viewImg('${m.imgUrl}')"></div>`
+          : `<div class="pc-text">${esc(m.text)}</div>`;
+        d.innerHTML = `${body}<div class="pc-meta">📍${m.city || ''} · ${timeAgo(m.ts)}</div>
+          <div class="pc-coms"><div id="ucl-${mid}">${coms}</div>
+            <div class="pc-add"><input class="pc-inp" id="uci-${mid}" placeholder="写评论..."><button class="pc-btn" onclick="submitUserCom('${mid}')">评论</button></div>
+          </div>`;
+        pe.appendChild(d);
+      });
+    }
+    navTo('user');
+  } catch(e) { toast('加载失败，请重试'); }
 }
-function submitUserCom(mid){
-  if(!ME.name){navTo('setup');return;}
-  const inp=document.getElementById('uci-'+mid);const text=inp?.value.trim();if(!text)return;
-  const msgs=DB.msgs();const m=msgs.find(x=>x.id===mid);if(!m)return;
-  m.coms=m.coms||[];m.coms.push({n:ME.name,t:text,uid:ME.id});DB.saveMsgs(msgs);inp.value='';
-  const ul=document.getElementById('ucl-'+mid);
-  if(ul){const d=document.createElement('div');d.className='pc-com';d.innerHTML=`<span class="pc-cnm">${esc(ME.name)}：</span>${esc(text)}`;ul.appendChild(d);}
-  const cl=document.getElementById('coms-list-'+mid);
-  if(cl){const d=document.createElement('div');d.className='com-item';d.innerHTML=`<span class="com-name">${esc(ME.name)}：</span>${esc(text)}`;cl.appendChild(d);document.getElementById('coms-'+mid)?.classList.add('open');}
-  toast('评论成功！聊天室好友可见 💌');
+
+async function submitUserCom(mid) {
+  if (!ME || !ME.name) { navTo('setup'); return; }
+  const inp = document.getElementById('uci-' + mid);
+  const text = inp?.value.trim(); if (!text) return;
+  try {
+    const res = await db.collection('chat_msgs').doc(mid).get();
+    const m = res.data[0]; if (!m) return;
+    const coms = m.coms || [];
+    coms.push({ n: ME.name, t: text, uid: ME.id });
+    await db.collection('chat_msgs').doc(mid).update({ coms });
+    inp.value = '';
+    const ul = document.getElementById('ucl-' + mid);
+    if (ul) { const d = document.createElement('div'); d.className = 'pc-com'; d.innerHTML = `<span class="pc-cnm">${esc(ME.name)}：</span>${esc(text)}`; ul.appendChild(d); }
+    const cl = document.getElementById('coms-list-' + mid);
+    if (cl) { const d = document.createElement('div'); d.className = 'com-item'; d.innerHTML = `<span class="com-name">${esc(ME.name)}：</span>${esc(text)}`; cl.appendChild(d); document.getElementById('coms-' + mid)?.classList.add('open'); }
+    toast('评论成功！聊天室好友可见 💌');
+  } catch(e) { toast('评论失败，请重试'); }
 }
-function toggleFav(){
-  const now=!DB.fav();DB.saveFav(now);syncFavUI();
-  if(now){const bar=document.getElementById('fav-bar');bar.classList.add('on');setTimeout(()=>bar.classList.remove('on'),3500);}
+
+function toggleFav() {
+  const now = localStorage.getItem('ruyu_fav') !== '1';
+  localStorage.setItem('ruyu_fav', now ? '1' : '0'); syncFavUI();
+  if (now) { const bar = document.getElementById('fav-bar'); bar.classList.add('on'); setTimeout(() => bar.classList.remove('on'), 3500); }
   else toast('已取消收藏推荐');
 }
-function openMenu(){document.getElementById('mask').classList.add('on');}
-function closeMask(){document.getElementById('mask').classList.remove('on');}
-function doExit(){
-  ME={id:'u'+Date.now(),name:'',age:'',city:'',job:'',gender:'',bio:'',hobby:'',avatar:null,emoji:'😊'};
-  DB.saveMe(null);gSel='';syncUI();toast('👋 已退出聊天室，欢迎再来');navTo('chat');
+
+function openMenu() { document.getElementById('mask').classList.add('on'); }
+function closeMask() { document.getElementById('mask').classList.remove('on'); }
+
+function doExit() {
+  ME = { id: 'u' + Date.now(), name: '', age: '', city: '', job: '', gender: '', bio: '', hobby: '', avatar: null, emoji: '😊' };
+  localStorage.removeItem('ruyu_me'); gSel = ''; syncUI();
+  toast('👋 已退出聊天室，欢迎再来'); navTo('chat');
 }
-function prepSetup(){
-  document.getElementById('s-name').value=ME.name||'';document.getElementById('s-age').value=ME.age||'';
-  document.getElementById('s-city').value=ME.city||'';document.getElementById('s-job').value=ME.job||'';
-  document.getElementById('s-bio').value=ME.bio||'';document.getElementById('s-hobby').value=ME.hobby||'';
-  gSel=ME.gender||'';
-  document.querySelectorAll('.gb').forEach(b=>b.classList.toggle('on',(b.textContent.includes('女')&&gSel==='female')||(b.textContent.includes('先')&&gSel==='male')));
-  const av=document.getElementById('av-pick');av.innerHTML=ME.avatar?`<img src="${ME.avatar}">`:(ME.emoji||'😊');
+
+function prepSetup() {
+  document.getElementById('s-name').value  = ME.name  || '';
+  document.getElementById('s-age').value   = ME.age   || '';
+  document.getElementById('s-city').value  = ME.city  || '';
+  document.getElementById('s-job').value   = ME.job   || '';
+  document.getElementById('s-bio').value   = ME.bio   || '';
+  document.getElementById('s-hobby').value = ME.hobby || '';
+  gSel = ME.gender || '';
+  document.querySelectorAll('.gb').forEach(b => b.classList.toggle('on',
+    (b.textContent.includes('女') && gSel === 'female') ||
+    (b.textContent.includes('先') && gSel === 'male')));
+  const av = document.getElementById('av-pick');
+  av.innerHTML = ME.avatar ? `<img src="${ME.avatar}">` : (ME.emoji || '😊');
 }
-function setGender(btn,g){gSel=g;document.querySelectorAll('.gb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
-function doSaveSetup(){
-  const name=document.getElementById('s-name').value.trim();if(!name){toast('请填写昵称');return;}
-  ME.name=name;ME.age=document.getElementById('s-age').value;ME.city=document.getElementById('s-city').value;
-  ME.job=document.getElementById('s-job').value.trim();ME.bio=document.getElementById('s-bio').value.trim();
-  ME.hobby=document.getElementById('s-hobby').value.trim();ME.gender=gSel;
-  ME.emoji=gSel==='female'?'👩':gSel==='male'?'👨':'😊';
-  DB.saveMe(ME);const us=DB.users();us[ME.id]=ME;DB.saveUsers(us);
-  syncUI();toast('🎉 资料已保存，欢迎加入！');navTo('chat');
+
+function setGender(btn, g) {
+  gSel = g;
+  document.querySelectorAll('.gb').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
 }
-function triggerAv(){document.getElementById('av-file').click();}
-function applyAvatar(ev){
-  const file=ev.target.files[0];if(!file)return;
-  const img=new Image(),r=new FileReader();
-  r.onload=e=>{img.onload=()=>{
-    const cv=document.createElement('canvas');cv.width=cv.height=200;
-    const ctx=cv.getContext('2d'),m=Math.min(img.width,img.height);
-    ctx.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,200,200);
-    ME.avatar=cv.toDataURL('image/jpeg',.76);ME.emoji='';DB.saveMe(ME);
-    document.getElementById('av-pick').innerHTML=`<img src="${ME.avatar}">`;syncUI();toast('🖼 头像已更新');
-  };img.src=e.target.result;};r.readAsDataURL(file);ev.target.value='';
+
+async function doSaveSetup() {
+  const name = document.getElementById('s-name').value.trim();
+  if (!name) { toast('请填写昵称'); return; }
+  ME.name   = name;
+  ME.age    = document.getElementById('s-age').value;
+  ME.city   = document.getElementById('s-city').value;
+  ME.job    = document.getElementById('s-job').value.trim();
+  ME.bio    = document.getElementById('s-bio').value.trim();
+  ME.hobby  = document.getElementById('s-hobby').value.trim();
+  ME.gender = gSel;
+  ME.emoji  = gSel === 'female' ? '👩' : gSel === 'male' ? '👨' : '😊';
+  localStorage.setItem('ruyu_me', JSON.stringify(ME));
+  try {
+    const res = await db.collection('users').where({ id: ME.id }).limit(1).get();
+    if (res.data.length) { await db.collection('users').doc(res.data[0]._id).update(ME); }
+    else { await db.collection('users').add(ME); }
+  } catch(e) { console.error('save user', e); }
+  syncUI(); toast('🎉 资料已保存，欢迎加入！'); navTo('chat');
 }
-function navTo(pageId){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-  document.getElementById('pg-'+pageId).classList.add('on');
-  if(pageId==='setup')prepSetup();if(pageId==='chat')scrollToBottom();
+
+function triggerAv() { document.getElementById('av-file').click(); }
+function applyAvatar(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const img = new Image(), r = new FileReader();
+  r.onload = e => {
+    img.onload = async () => {
+      const cv = document.createElement('canvas'); cv.width = cv.height = 200;
+      const ctx = cv.getContext('2d'), m = Math.min(img.width, img.height);
+      ctx.drawImage(img, (img.width-m)/2, (img.height-m)/2, m, m, 0, 0, 200, 200);
+      ME.avatar = cv.toDataURL('image/jpeg', .76); ME.emoji = '';
+      localStorage.setItem('ruyu_me', JSON.stringify(ME));
+      document.getElementById('av-pick').innerHTML = `<img src="${ME.avatar}">`;
+      syncUI(); toast('🖼 头像已更新');
+    }; img.src = e.target.result;
+  }; r.readAsDataURL(file); ev.target.value = '';
 }
-function scrollToBottom(){setTimeout(()=>{const b=document.getElementById('chat-msgs');if(b)b.scrollTop=b.scrollHeight;},60);}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function formatTime(ts){if(!ts)return'';const d=new Date(ts);return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
-function timeAgo(ts){if(!ts)return'';const s=Math.floor((Date.now()-ts)/1000);if(s<60)return'刚刚';if(s<3600)return Math.floor(s/60)+'分钟前';if(s<86400)return Math.floor(s/3600)+'小时前';return Math.floor(s/86400)+'天前';}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600);}
-function viewImg(src){document.getElementById('img-view-src').src=src;document.getElementById('img-view').classList.add('on');}
+
+function navTo(pageId) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.getElementById('pg-' + pageId).classList.add('on');
+  if (pageId === 'setup') prepSetup();
+  if (pageId === 'chat') scrollToBottom();
+}
+function scrollToBottom() { setTimeout(() => { const b = document.getElementById('chat-msgs'); if (b) b.scrollTop = b.scrollHeight; }, 60); }
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function formatTime(ts) { if (!ts) return ''; const d = new Date(ts); return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0'); }
+function timeAgo(ts) { if (!ts) return ''; const s = Math.floor((Date.now()-ts)/1000); if (s<60) return '刚刚'; if (s<3600) return Math.floor(s/60)+'分钟前'; if (s<86400) return Math.floor(s/3600)+'小时前'; return Math.floor(s/86400)+'天前'; }
+function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2600); }
+function viewImg(src) { document.getElementById('img-view-src').src = src; document.getElementById('img-view').classList.add('on'); }
+
+initCloud();
 </script>
 </body>
 </html>

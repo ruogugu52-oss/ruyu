@@ -6,35 +6,24 @@
     <title>莉玲婚恋</title>
     <script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/2.10.3/cloudbase.full.js"></script>
     <style>
-        body, html { margin: 0; padding: 0; height: 100vh; font-family: -apple-system, sans-serif; overflow: hidden; }
+        body, html { margin: 0; padding: 0; height: 100vh; font-family: -apple-system, sans-serif; overflow: hidden; background: #fdf2f5; }
         .app-bg { position: fixed; inset: 0; z-index: -1; background: linear-gradient(180deg, #fcebef 0%, #e9e9f8 50%, #f7e9f1 100%); }
-        
-        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; height: 44px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 10; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; height: 44px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 10; border-bottom: 0.5px solid rgba(0,0,0,0.05); }
         .header-center { font-size: 17px; font-weight: 600; color: #333; }
-        .loc { color: #52c41a; font-size: 15px; }
-
-        #chat-flow { height: calc(100vh - 100px); overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 16px; padding-bottom: 80px; }
+        #chat-flow { height: calc(100vh - 110px); overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         .msg-row { display: flex; align-items: flex-start; gap: 10px; width: 100%; }
         .msg-row.left { justify-content: flex-start; }
         .msg-row.right { justify-content: flex-end; flex-direction: row-reverse; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid #fff; object-fit: cover; }
-        .bubble { max-width: 70%; padding: 10px 14px; border-radius: 8px; font-size: 15px; line-height: 1.4; position: relative; }
+        .bubble { max-width: 70%; padding: 10px 14px; border-radius: 10px; font-size: 15px; line-height: 1.4; }
         .left .bubble { background: #e95464; color: #fff; }
         .right .bubble { background: #4a90e2; color: #fff; }
-        .msg-img { max-width: 100%; border-radius: 6px; margin-top: 5px; border: 1px solid rgba(255,255,255,0.3); }
-
         .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 12px; border-top: 1px solid #eee; z-index: 100; }
-        #join-btn-area { text-align: center; padding: 10px 0; }
-        .btn-large { background: #e95464; color: white; border: none; padding: 12px 0; border-radius: 12px; font-weight: bold; font-size: 16px; width: 90%; }
-
-        #input-area { display: none; }
-        .input-row { display: flex; gap: 10px; align-items: center; }
+        .btn-large { background: #e95464; color: white; border: none; padding: 14px 0; border-radius: 12px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer; }
+        .input-row { display: none; align-items: center; gap: 10px; }
         .msg-input { flex: 1; border: 1px solid #eee; padding: 10px 15px; border-radius: 20px; outline: none; background: #f5f5f5; }
-        .send-btn { background: #52c41a; color: #fff; border: none; padding: 8px 18px; border-radius: 18px; font-weight: bold; }
-        .exit-btn { font-size: 12px; color: #999; margin-left: 10px; cursor: pointer; }
-
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; }
-        .modal-body { background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-body { background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 300px; text-align: center; }
     </style>
 </head>
 <body>
@@ -43,145 +32,127 @@
 <header>
     <div style="width:40px"></div>
     <div class="header-center">莉玲婚恋</div>
-    <div class="loc">武汉</div>
+    <div style="width:40px; color:#52c41a; font-size:14px;">武汉</div>
 </header>
 
 <div id="chat-flow"></div>
 
 <div class="bottom-bar">
-    <div id="join-btn-area">
+    <div id="join-area">
         <button class="btn-large" onclick="document.getElementById('reg-modal').style.display='flex'">加入聊天</button>
     </div>
-    <div id="input-area">
-        <div class="input-row">
-            <label style="font-size: 22px; cursor: pointer;">🖼️<input type="file" id="f-file" style="display:none" onchange="handleImgPre()"></label>
-            <input type="text" id="t-msg" class="msg-input" placeholder="输入消息...">
-            <button class="send-btn" onclick="sendMsg()">发送</button>
-            <span class="exit-btn" onclick="logout()">退出</span>
-        </div>
-        <img id="post-pre" style="display:none; width:40px;height:40px;margin-top:5px;border-radius:4px;">
+    <div id="input-area" class="input-row">
+        <label style="font-size: 22px; cursor: pointer;">🖼️<input type="file" id="msg-img" style="display:none"></label>
+        <input type="text" id="msg-txt" class="msg-input" placeholder="输入消息...">
+        <button onclick="sendMsg()" style="background:#52c41a; color:#fff; border:none; padding:8px 15px; border-radius:15px; font-weight:bold;">发送</button>
+        <span onclick="logout()" style="font-size:12px; color:#999; margin-left:5px;">退出</span>
     </div>
 </div>
 
-<div class="modal" id="reg-modal">
+<div id="reg-modal" class="modal">
     <div class="modal-body">
-        <h3 style="margin:0 0 10px 0">完善资料</h3>
-        <p style="font-size:13px; color:#999; margin-bottom:15px;">请上传头像并输入昵称</p>
+        <h3 style="margin:0 0 15px 0;">完善资料</h3>
         <label>
-            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=user" id="ava-pre" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid #eee;">
-            <input type="file" id="ava-file" style="display:none" onchange="handleAvaPre()">
-            <div style="color:#4a90e2; font-size:12px; margin:8px 0 15px 0">点击更换头像</div>
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=lily" id="pre-ava" style="width:65px;height:65px;border-radius:50%;object-fit:cover;border:2px solid #eee;">
+            <input type="file" id="ava-file" style="display:none" onchange="previewAva(this)">
+            <div style="color:#4a90e2; font-size:12px; margin:8px 0;">点击更换头像</div>
         </label>
-        <input type="text" id="nick-name" placeholder="输入昵称" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; box-sizing:border-box; margin-bottom:20px;">
-        <button onclick="saveProfile()" style="background:#e95464; color:white; border:none; width:100%; padding:14px; border-radius:10px; font-weight:bold; font-size:16px;">进入社区</button>
+        <input type="text" id="nick" placeholder="输入昵称" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; margin-bottom:15px; box-sizing:border-box;">
+        <button id="entry-btn" onclick="fastJoin()" style="background:#e95464; color:white; border:none; width:100%; padding:14px; border-radius:10px; font-weight:bold;">进入社区</button>
     </div>
 </div>
 
 <script>
+    // 请确保环境ID正确
     const app = cloudbase.init({ env: 'ruyu-5glawvibc792700f', region: 'ap-shanghai' });
     const db = app.database();
-    let myInfo = JSON.parse(localStorage.getItem('ruyu_user')) || null;
-    let postFile = null;
+    let myInfo = JSON.parse(localStorage.getItem('ruyu_user'));
 
     async function init() {
         try {
-            const auth = app.auth();
-            if (!(await auth.getLoginState())) await auth.anonymousAuthProvider().signIn();
-            
+            await app.auth().anonymousAuthProvider().signIn();
             if (myInfo) {
-                document.getElementById('join-btn-area').style.display = 'none';
-                document.getElementById('input-area').style.display = 'block';
+                document.getElementById('join-area').style.display = 'none';
+                document.getElementById('input-area').style.display = 'flex';
             }
-
-            db.collection('chat_posts').orderBy('time', 'desc').limit(30).watch({
+            db.collection('chat_posts').orderBy('time', 'desc').limit(20).watch({
                 onChange: (sn) => {
                     const flow = document.getElementById('chat-flow');
                     flow.innerHTML = sn.docs.reverse().map(d => `
-                        <div class="msg-row ${d.uid === auth.hasLoginState().user.uid ? 'right' : 'left'}">
-                            <img src="${d.avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=guest'}" class="avatar">
-                            <div class="bubble">
-                                ${d.text || ''}
-                                ${d.img ? `<img src="${d.img}" class="msg-img">` : ''}
-                            </div>
+                        <div class="msg-row ${d.uid === app.auth().hasLoginState().user.uid ? 'right' : 'left'}">
+                            <img src="${d.avatar}" class="avatar">
+                            <div class="bubble">${d.text}${d.img ? `<br><img src="${d.img}" style="width:100%;border-radius:5px;margin-top:5px;">` : ''}</div>
                         </div>
                     `).join('');
                     flow.scrollTop = flow.scrollHeight;
                 }
             });
-        } catch(e) { alert("云端连接失败，请确认环境ID"); }
+        } catch(e) { console.log(e); }
     }
 
-    function handleAvaPre() {
-        const f = document.getElementById('ava-file').files[0];
-        if(f) { const r = new FileReader(); r.onload = e => document.getElementById('ava-pre').src = e.target.result; r.readAsDataURL(f); }
-    }
-
-    async function saveProfile() {
-        const nick = document.getElementById('nick-name').value.trim();
-        if (!nick) return alert("昵称不能为空");
-        
-        const avaFile = document.getElementById('ava-file').files[0];
-        let avaUrl = document.getElementById('ava-pre').src;
-
-        try {
-            // 按钮禁用防止重复点
-            const btn = event.target; btn.innerText = "正在进入..."; btn.disabled = true;
-
-            if (avaFile) {
-                const res = await app.uploadFile({ cloudPath: `ava/${Date.now()}.jpg`, filePath: avaFile });
-                const link = await app.getTempFileURL({ fileList: [res.fileID] });
-                avaUrl = link.fileList[0].tempFileURL;
-            }
-            
-            myInfo = { nickname: nick, avatar: avaUrl };
-            localStorage.setItem('ruyu_user', JSON.stringify(myInfo));
-            location.reload();
-        } catch(e) {
-            // 如果上传失败，依然允许进入，使用默认头像
-            myInfo = { nickname: nick, avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=" + nick };
-            localStorage.setItem('ruyu_user', JSON.stringify(myInfo));
-            location.reload();
-        }
-    }
-
-    function handleImgPre() {
-        postFile = document.getElementById('f-file').files[0];
-        if(postFile) {
+    function previewAva(input) {
+        if(input.files[0]) {
             const r = new FileReader();
-            r.onload = e => { document.getElementById('post-pre').src = e.target.result; document.getElementById('post-pre').style.display='block'; };
-            r.readAsDataURL(postFile);
+            r.onload = e => document.getElementById('pre-ava').src = e.target.result;
+            r.readAsDataURL(input.files[0]);
         }
+    }
+
+    // --- 核心修复：快速加入逻辑 ---
+    async function fastJoin() {
+        const name = document.getElementById('nick').value.trim();
+        if(!name) return alert("写个名字吧");
+        
+        const btn = document.getElementById('entry-btn');
+        btn.innerText = "进入中...";
+        btn.disabled = true;
+
+        let finalAva = document.getElementById('pre-ava').src;
+        const file = document.getElementById('ava-file').files[0];
+
+        // 尝试上传，如果失败则直接使用随机头像进入
+        if (file) {
+            try {
+                const res = await app.uploadFile({ cloudPath: `ava/${Date.now()}.jpg`, filePath: file });
+                const link = await app.getTempFileURL({ fileList: [res.fileID] });
+                finalAva = link.fileList[0].tempFileURL;
+            } catch(e) {
+                console.log("头像上传失败，改用随机头像");
+                finalAva = `https://api.dicebear.com/7.x/adventurer/svg?seed=${name}`;
+            }
+        }
+
+        myInfo = { nickname: name, avatar: finalAva };
+        localStorage.setItem('ruyu_user', JSON.stringify(myInfo));
+        location.reload();
     }
 
     async function sendMsg() {
-        const text = document.getElementById('t-msg').value.trim();
-        if (!text && !postFile) return;
+        const txt = document.getElementById('msg-txt').value;
+        const file = document.getElementById('msg-img').files[0];
+        if(!txt && !file) return;
 
+        let url = "";
         try {
-            let imgUrl = "";
-            if (postFile) {
-                const res = await app.uploadFile({ cloudPath: `chat/${Date.now()}.jpg`, filePath: postFile });
+            if(file) {
+                const res = await app.uploadFile({ cloudPath: `chat/${Date.now()}.jpg`, filePath: file });
                 const link = await app.getTempFileURL({ fileList: [res.fileID] });
-                imgUrl = link.fileList[0].tempFileURL;
+                url = link.fileList[0].tempFileURL;
             }
-
             await db.collection('chat_posts').add({
                 uid: app.auth().hasLoginState().user.uid,
                 nickname: myInfo.nickname,
                 avatar: myInfo.avatar,
-                text: text,
-                img: imgUrl,
+                text: txt,
+                img: url,
                 time: new Date()
             });
-
-            document.getElementById('t-msg').value = "";
-            document.getElementById('post-pre').style.display = "none";
-            postFile = null;
-        } catch(e) { alert("发布失败，请检查数据库权限"); }
+            document.getElementById('msg-txt').value = "";
+            document.getElementById('msg-img').value = "";
+        } catch(e) { alert("发送失败，请检查云开发数据库权限"); }
     }
 
     function logout() { localStorage.removeItem('ruyu_user'); location.reload(); }
-
     init();
 </script>
 </body>

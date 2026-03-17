@@ -3,168 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>如玉婚恋</title>
+    <title>莉玲婚恋</title>
     <script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/2.10.3/cloudbase.full.js"></script>
     <style>
-        body, html { margin: 0; padding: 0; height: 100vh; font-family: -apple-system, sans-serif; background: #fdf2f5; }
+        body, html { margin: 0; padding: 0; height: 100vh; font-family: -apple-system, sans-serif; overflow: hidden; }
+        .app-bg { position: fixed; inset: 0; z-index: -1; background: linear-gradient(180deg, #fcebef 0%, #e9e9f8 50%, #f7e9f1 100%); }
         
-        /* 背景图 1:1 还原 */
-        .app-bg {
-            position: fixed; inset: 0; z-index: -1;
-            background: linear-gradient(to bottom, #fdf2f5, #e8e8fb);
-            background-image: url('https://api.dujin.org/bing/1920.php'); /* 建议换成你图中的粉紫色渐变底图 */
-            background-size: cover; filter: brightness(0.9) saturate(1.2);
-        }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; height: 44px; background: rgba(255,255,255,0.6); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 10; }
+        .header-center { font-size: 17px; font-weight: 600; color: #333; }
+        .loc { color: #52c41a; font-size: 15px; }
 
-        /* 顶部状态栏 */
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
-            position: sticky; top: 0; z-index: 10;
-        }
-        .header-title { font-size: 18px; color: #333; font-weight: 500; }
-        .loc { color: #52c41a; font-size: 16px; }
-        .icon-send { font-size: 24px; color: #52c41a; cursor: pointer; transform: rotate(-15deg); }
+        /* 聊天流 */
+        #chat-flow { height: calc(100vh - 120px); overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 16px; }
+        .msg-row { display: flex; align-items: flex-start; gap: 10px; width: 100%; }
+        .msg-row.left { justify-content: flex-start; }
+        .msg-row.right { justify-content: flex-end; flex-direction: row-reverse; }
+        .avatar { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .bubble { max-width: 70%; padding: 10px 14px; border-radius: 8px; font-size: 15px; line-height: 1.4; position: relative; }
+        .left .bubble { background: #e95464; color: #fff; }
+        .right .bubble { background: #4a90e2; color: #fff; }
+        .msg-img { max-width: 100%; border-radius: 6px; margin-top: 5px; border: 1px solid rgba(255,255,255,0.3); }
 
-        /* 聊天区域 */
-        #chat-flow { flex: 1; padding: 20px 15px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; height: calc(100vh - 60px); }
+        /* 底部操作区 */
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 15px; padding-bottom: calc(15px + env(safe-area-inset-bottom)); border-top: 1px solid #eee; z-index: 100; }
         
-        /* 气泡逻辑 */
-        .msg-row { display: flex; align-items: flex-start; gap: 10px; max-width: 85%; }
-        .msg-row.left { align-self: flex-start; }
-        .msg-row.right { align-self: flex-end; flex-direction: row-reverse; }
+        /* 状态1：加入按钮 */
+        #join-btn-area { text-align: center; }
+        .btn-large { background: #e95464; color: white; border: none; padding: 12px 60px; border-radius: 25px; font-weight: bold; font-size: 16px; width: 80%; }
 
-        .avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; flex-shrink: 0; }
-        
-        .bubble { 
-            padding: 10px 14px; border-radius: 12px; font-size: 15px; line-height: 1.4; position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); word-break: break-all;
-        }
-        .left .bubble { background: #ff4d6d; color: #fff; border-top-left-radius: 2px; }
-        .right .bubble { background: #40a9ff; color: #fff; border-top-right-radius: 2px; }
-        
-        .msg-img { max-width: 200px; border-radius: 8px; margin-top: 5px; display: block; }
-
-        /* 发布弹窗 */
-        #input-panel {
-            position: fixed; bottom: 0; left: 0; right: 0; background: #fff; 
-            padding: 15px; border-top-left-radius: 20px; border-top-right-radius: 20px;
-            transform: translateY(100%); transition: 0.3s; z-index: 100;
-        }
-        #input-panel.active { transform: translateY(0); }
+        /* 状态2：消息输入 */
+        #input-area { display: none; }
         .input-row { display: flex; gap: 10px; align-items: center; }
-        input[type="text"] { flex: 1; background: #f0f0f0; border: none; padding: 12px; border-radius: 10px; outline: none; }
-        
-        .mask { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:90; }
+        .msg-input { flex: 1; border: 1px solid #eee; padding: 10px 15px; border-radius: 20px; outline: none; background: #f5f5f5; }
+        .send-btn { background: #52c41a; color: #fff; border: none; padding: 8px 15px; border-radius: 15px; font-weight: bold; }
+        .exit-link { font-size: 12px; color: #999; margin-top: 8px; text-align: right; text-decoration: underline; cursor: pointer; }
+
+        /* 弹窗 */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; }
+        .modal-body { background: white; padding: 25px; border-radius: 20px; width: 80%; max-width: 320px; text-align: center; }
+        .avatar-pre { width: 60px; height: 60px; border-radius: 50%; background: #f0f0f0; margin: 10px auto; display: block; object-fit: cover; }
     </style>
 </head>
 <body>
 
 <div class="app-bg"></div>
-
 <header>
-    <div class="icon-send" onclick="toggleInput()">✈</div>
-    <div class="header-title">莉玲婚恋</div>
-    <div class="loc">成都</div>
+    <div style="width:40px"></div>
+    <div class="header-center">莉玲婚恋</div>
+    <div class="loc">武汉</div>
 </header>
 
-<div id="chat-flow">
-    <!-- 初始假数据用于演示 UI -->
-    <div class="msg-row left">
-        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=1" class="avatar">
-        <div class="bubble">今天真是倒霉的一天</div>
+<div id="chat-flow"></div>
+
+<div class="bottom-bar">
+    <div id="join-btn-area">
+        <button class="btn-large" onclick="openModal()">加入聊天</button>
     </div>
-    <div class="msg-row right">
-        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=me" class="avatar">
-        <div class="bubble">外滩晚上的风很大、夜景不错👍</div>
+    <div id="input-area">
+        <div class="input-row">
+            <label style="font-size: 22px; cursor: pointer;">🖼️<input type="file" id="f-file" style="display:none" onchange="handleFile()"></label>
+            <input type="text" id="t-msg" class="msg-input" placeholder="输入消息...">
+            <button class="send-btn" onclick="send()">发送</button>
+        </div>
+        <div id="pre-box" style="display:none; margin-top:5px;"><img id="pre-view" style="width:40px;height:40px;border-radius:4px;"></div>
+        <div class="exit-link" onclick="logout()">退出登录</div>
     </div>
 </div>
 
-<div class="mask" id="mask" onclick="toggleInput()"></div>
-<div id="input-panel">
-    <div class="input-row">
-        <label style="font-size: 24px; cursor: pointer;">📷<input type="file" id="f-in" style="display:none" onchange="preImg()"></label>
-        <input type="text" id="t-in" placeholder="输入消息...">
-        <button onclick="sendMsg()" style="background:#52c41a; color:white; border:none; padding:10px 15px; border-radius:8px;">发送</button>
-    </div>
-    <div id="p-box" style="display:none; margin-top:10px;">
-        <img id="p-view" style="width:60px; height:60px; border-radius:5px;">
+<div class="modal" id="reg-modal">
+    <div class="modal-body">
+        <h3 style="margin-top:0">完善资料</h3>
+        <p style="font-size:12px; color:#999">请上传头像并输入昵称</p>
+        <label>
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=new" id="ava-pre" class="avatar-pre">
+            <input type="file" id="ava-file" style="display:none" onchange="preAva()">
+            <span style="font-size:12px; color:#4a90e2">点击更换头像</span>
+        </label>
+        <input type="text" id="nick-name" placeholder="输入昵称" style="width:100%; padding:10px; margin-top:15px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;">
+        <button onclick="saveProfile()" style="background:#e95464; color:white; border:none; width:100%; padding:12px; border-radius:10px; margin-top:20px; font-weight:bold;">进入社区</button>
     </div>
 </div>
 
 <script>
     const app = cloudbase.init({ env: 'ruyu-5glawvibc792700f', region: 'ap-shanghai' });
     const db = app.database();
-    let myUid = "";
+    let myUser = JSON.parse(localStorage.getItem('ruyu_user')) || null;
+    let selectedFile = null;
 
     async function init() {
         const auth = app.auth();
-        const login = await auth.getLoginState() || await auth.anonymousAuthProvider().signIn();
-        myUid = login.user.uid;
+        if (!(await auth.getLoginState())) await auth.anonymousAuthProvider().signIn();
+        
+        // UI 状态判断
+        if (myUser) {
+            document.getElementById('join-btn-area').style.display = 'none';
+            document.getElementById('input-area').style.display = 'block';
+        }
 
         db.collection('chat_posts').orderBy('time', 'desc').limit(20).watch({
             onChange: (sn) => {
                 const flow = document.getElementById('chat-flow');
-                flow.innerHTML = sn.docs.reverse().map(d => {
-                    const isMe = d.uid === myUid;
-                    return `
-                        <div class="msg-row ${isMe ? 'right' : 'left'}">
-                            <img src="${d.avatar}" class="avatar">
-                            <div class="bubble">
-                                ${d.text}
-                                ${d.img ? `<img src="${d.img}" class="msg-img">` : ''}
-                            </div>
+                flow.innerHTML = sn.docs.reverse().map(d => `
+                    <div class="msg-row ${d.uid === auth.hasLoginState().user.uid ? 'right' : 'left'}">
+                        <img src="${d.avatar}" class="avatar">
+                        <div class="bubble">
+                            ${d.text}
+                            ${d.img ? `<img src="${d.img}" class="msg-img">` : ''}
                         </div>
-                    `;
-                }).join('');
+                    </div>
+                `).join('');
                 flow.scrollTop = flow.scrollHeight;
             }
         });
     }
 
-    function toggleInput() {
-        document.getElementById('input-panel').classList.toggle('active');
-        document.getElementById('mask').style.display = 
-            document.getElementById('mask').style.display === 'block' ? 'none' : 'block';
+    // --- 资料处理 ---
+    function openModal() { document.getElementById('reg-modal').style.display = 'flex'; }
+    function preAva() {
+        const f = document.getElementById('ava-file').files[0];
+        const r = new FileReader();
+        r.onload = e => document.getElementById('ava-pre').src = e.target.result;
+        r.readAsDataURL(f);
     }
 
-    function preImg() {
-        const f = document.getElementById('f-in').files[0];
-        if (f) {
-            const r = new FileReader();
-            r.onload = e => {
-                document.getElementById('p-view').src = e.target.result;
-                document.getElementById('p-box').style.display = 'block';
-            };
-            r.readAsDataURL(f);
-        }
-    }
+    async function saveProfile() {
+        const nick = document.getElementById('nick-name').value.trim();
+        const avaFile = document.getElementById('ava-file').files[0];
+        if (!nick) return alert("请输入昵称");
 
-    async function sendMsg() {
-        const text = document.getElementById('t-in').value;
-        const file = document.getElementById('f-in').files[0];
-        if (!text && !file) return;
-
-        let url = "";
-        if (file) {
-            const res = await app.uploadFile({ cloudPath: `chat/${Date.now()}.jpg`, filePath: file });
+        let avaUrl = document.getElementById('ava-pre').src;
+        if (avaFile) {
+            const res = await app.uploadFile({ cloudPath: `ava/${Date.now()}.jpg`, filePath: avaFile });
             const link = await app.getTempFileURL({ fileList: [res.fileID] });
-            url = link.fileList[0].tempFileURL;
+            avaUrl = link.fileList[0].tempFileURL;
+        }
+
+        myUser = { nickname: nick, avatar: avaUrl };
+        localStorage.setItem('ruyu_user', JSON.stringify(myUser));
+        location.reload(); // 刷新以应用新资料
+    }
+
+    // --- 聊天处理 ---
+    function handleFile() {
+        selectedFile = document.getElementById('f-file').files[0];
+        const r = new FileReader();
+        r.onload = e => {
+            document.getElementById('pre-view').src = e.target.result;
+            document.getElementById('pre-box').style.display = 'block';
+        };
+        r.readAsDataURL(selectedFile);
+    }
+
+    async function send() {
+        const text = document.getElementById('t-msg').value;
+        if (!text && !selectedFile) return;
+
+        let imgUrl = "";
+        if (selectedFile) {
+            const res = await app.uploadFile({ cloudPath: `chat/${Date.now()}.jpg`, filePath: selectedFile });
+            const link = await app.getTempFileURL({ fileList: [res.fileID] });
+            imgUrl = link.fileList[0].tempFileURL;
         }
 
         await db.collection('chat_posts').add({
-            uid: myUid,
-            nickname: "我",
-            avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${myUid}`,
+            uid: app.auth().hasLoginState().user.uid,
+            nickname: myUser.nickname,
+            avatar: myUser.avatar,
             text: text,
-            img: url,
+            img: imgUrl,
             time: new Date()
         });
 
-        document.getElementById('t-in').value = "";
-        document.getElementById('f-in').value = "";
-        document.getElementById('p-box').style.display = "none";
-        toggleInput();
+        document.getElementById('t-msg').value = "";
+        document.getElementById('pre-box').style.display = "none";
+        selectedFile = null;
+    }
+
+    function logout() {
+        if(confirm("确定要退出并重新设置资料吗？")) {
+            localStorage.removeItem('ruyu_user');
+            location.reload();
+        }
     }
 
     init();

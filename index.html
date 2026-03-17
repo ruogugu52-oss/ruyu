@@ -2,181 +2,149 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>如玉社区 - 终极修复版</title>
-    <!-- 使用稳定版 SDK -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>如玉婚恋 - 核心逻辑恢复版</title>
     <script src="https://imgcache.qq.com/qcloud/cloudbase-js-sdk/2.10.3/cloudbase.full.js"></script>
     <style>
-        :root { --pink: #ff69b4; }
-        body { margin: 0; background: #f5f5f5; font-family: sans-serif; }
-        /* 背景图层 */
-        .bg { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; 
-               background: url('https://api.dujin.org/bing/1920.php') center/cover; filter: blur(10px); }
+        :root { --main-pink: #ff69b4; --bg-glass: rgba(255, 255, 255, 0.9); }
+        body, html { margin: 0; padding: 0; height: 100vh; font-family: sans-serif; background: #fdf2f5; }
+        .app-container { display: flex; flex-direction: column; height: 100vh; background: url('https://api.dujin.org/bing/1920.php') center/cover fixed; position: relative; }
+        .overlay { position: absolute; inset: 0; backdrop-filter: blur(10px); background: rgba(255,255,255,0.2); z-index: 1; }
         
-        .app { display: flex; flex-direction: column; height: 100vh; max-width: 500px; margin: 0 auto; background: rgba(255,255,255,0.7); }
-        header { background: var(--pink); color: white; padding: 15px; text-align: center; font-weight: bold; }
+        .content-wrap { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100vh; }
+        #flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         
-        /* 动态列表 */
-        #flow { flex: 1; overflow-y: auto; padding: 10px; }
-        .post { background: white; margin-bottom: 15px; padding: 12px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .post-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .ava { width: 40px; height: 40px; border-radius: 50%; background: #eee; }
-        .nick { font-weight: bold; color: var(--pink); }
-        .p-img { width: 100%; border-radius: 8px; margin-top: 8px; }
+        /* 恢复你之前的卡片美化 */
+        .card { display: flex; gap: 10px; background: var(--bg-glass); padding: 12px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); animation: up 0.3s ease; }
+        .ava { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; flex-shrink: 0; }
+        .nickname { font-weight: bold; color: var(--main-pink); font-size: 0.9rem; margin-bottom: 5px; }
+        .mood-img { width: 100%; border-radius: 10px; margin-top: 8px; max-height: 250px; object-fit: cover; }
 
-        /* 发布区域 */
-        .bottom { background: white; padding: 15px; border-top: 1px solid #ddd; }
-        .input-row { display: flex; gap: 10px; align-items: center; }
-        input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 20px; outline: none; }
-        .btn { background: var(--pink); color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; }
+        /* 底部发布栏 */
+        .post-bar { background: #fff; padding: 10px 15px; border-top: 1px solid #eee; }
+        .row { display: flex; align-items: center; gap: 10px; }
+        input[type="text"] { flex: 1; border: 1px solid #eee; padding: 10px 15px; border-radius: 20px; outline: none; background: #f9f9f9; }
+        .btn-post { background: var(--main-pink); color: #fff; border: none; padding: 8px 18px; border-radius: 18px; font-weight: bold; cursor: pointer; }
         
-        /* 状态提示 */
-        #status-tip { position: fixed; top: 0; width: 100%; background: red; color: white; font-size: 12px; text-align: center; z-index: 999; display: none; }
+        #pre-img { display: none; width: 60px; height: 60px; border-radius: 8px; object-fit: cover; margin-top: 10px; border: 2px solid var(--main-pink); }
+        @keyframes up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: flex; justify-content: center; align-items: center; }
+        .modal-inner { background: #fff; padding: 25px; border-radius: 20px; width: 80%; max-width: 320px; text-align: center; }
     </style>
 </head>
 <body>
 
-<div id="status-tip">正在检测云端连接...</div>
-<div class="bg"></div>
+<div class="app-container">
+    <div class="overlay"></div>
+    <div class="content-wrap">
+        <div style="text-align:center; padding:15px; color:#fff; font-weight:bold; text-shadow:0 2px 4px rgba(0,0,0,0.3);">如玉婚恋社区</div>
+        
+        <div id="flow"></div>
 
-<div class="app">
-    <header>如玉婚恋社区</header>
-    <div id="flow"></div>
-
-    <div class="bottom" id="action-bar" style="display: none;">
-        <div class="input-row">
-            <label style="cursor: pointer;">🖼️<input type="file" id="f-selector" accept="image/*" style="display:none" onchange="handleFile(this)"></label>
-            <input type="text" id="p-text" placeholder="分享此刻心情...">
-            <button class="btn" onclick="send()">发布</button>
-        </div>
-        <div id="pre-box" style="display:none; margin-top:10px;">
-            <img id="img-pre" style="width:50px; height:50px; border-radius:5px;">
-            <span style="font-size:12px; color:green;">已选中图片</span>
-        </div>
-    </div>
-
-    <!-- 注册遮罩 -->
-    <div id="reg-mask" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:100;">
-        <div style="background:white; padding:30px; border-radius:20px; width:80%; text-align:center;">
-            <h3>欢迎来到如玉</h3>
-            <input type="text" id="my-nick" placeholder="给自己起个昵称" style="width:100%; padding:10px; margin-bottom:20px; border:1px solid #ddd; border-radius:10px;">
-            <button onclick="doJoin()" style="background:var(--pink); color:white; border:none; width:100%; padding:12px; border-radius:10px;">开始聊天</button>
+        <div id="publish-ui" class="post-bar" style="display:none;">
+            <div class="row">
+                <label style="font-size:1.6rem; cursor:pointer;">🖼️<input type="file" id="file-in" accept="image/*" style="display:none;" onchange="handlePreview(this)"></label>
+                <input type="text" id="msg-in" placeholder="分享此刻心情...">
+                <button class="btn-post" onclick="doSubmit()">发布</button>
+            </div>
+            <img id="pre-img">
         </div>
     </div>
 </div>
 
-<script>
-    // 【核心】请再次确认环境 ID 是否准确
-    const ENV_ID = 'ruyu-5glawvibc792700f'; 
-    const app = cloudbase.init({ env: ENV_ID, region: 'ap-shanghai' });
-    const db = app.database();
-    let me = null;
-    let fileToUpload = null;
+<div id="reg-modal" class="modal">
+    <div class="modal-inner">
+        <h3 style="color:var(--main-pink); margin-bottom:20px;">欢迎加入</h3>
+        <input type="text" id="nick-in" placeholder="设置昵称" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; box-sizing:border-box;">
+        <button onclick="saveUser()" style="background:var(--main-pink); color:#fff; border:none; width:100%; padding:12px; border-radius:10px; margin-top:15px; font-weight:bold;">开启缘分</button>
+    </div>
+</div>
 
-    // 1. 初始化检测
+<script>
+    // 依然使用你的环境ID
+    const app = cloudbase.init({ env: 'ruyu-5glawvibc792700f', region: 'ap-shanghai' });
+    const db = app.database();
+    let user = null;
+    let selectedFile = null;
+
     async function init() {
-        const tip = document.getElementById('status-tip');
         try {
             const auth = app.auth();
-            const login = await auth.getLoginState();
-            if (!login) await auth.anonymousAuthProvider().signIn();
-            console.log("云端已连接");
-            loadData();
-        } catch (e) {
-            tip.style.display = 'block';
-            tip.innerText = "错误：连不上腾讯云，请检查环境ID和安全域名！";
-        }
-    }
-
-    // 2. 加载动态
-    function loadData() {
-        db.collection('chat_posts').orderBy('time', 'desc').limit(20).watch({
-            onChange: (sn) => {
-                const flow = document.getElementById('flow');
-                flow.innerHTML = '';
-                sn.docs.reverse().forEach(d => {
-                    const post = document.createElement('div');
-                    post.className = 'post';
-                    post.innerHTML = `
-                        <div class="post-top">
+            if (!(await auth.getLoginState())) await auth.anonymousAuthProvider().signIn();
+            
+            // 实时同步
+            db.collection('chat_posts').orderBy('time', 'desc').limit(20).watch({
+                onChange: (snap) => {
+                    const flow = document.getElementById('flow');
+                    flow.innerHTML = snap.docs.reverse().map(d => `
+                        <div class="card">
                             <img src="${d.avatar}" class="ava">
-                            <span class="nick">${d.nickname}</span>
+                            <div style="flex:1">
+                                <div class="nickname">${d.nickname}</div>
+                                <div style="color:#444; line-height:1.5;">${d.text}</div>
+                                ${d.img ? `<img src="${d.img}" class="mood-img">` : ''}
+                            </div>
                         </div>
-                        <div>${d.text}</div>
-                        ${d.img ? `<img src="${d.img}" class="p-img">` : ''}
-                    `;
-                    flow.appendChild(post);
-                });
-                flow.scrollTop = flow.scrollHeight;
-            },
-            onError: (err) => {
-                document.getElementById('status-tip').style.display = 'block';
-                document.getElementById('status-tip').innerText = "数据库权限不足，请在后台开启集合权限";
-            }
-        });
+                    `).join('');
+                    flow.scrollTop = flow.scrollHeight;
+                }
+            });
+        } catch (e) { console.error("初始化失败", e); }
     }
 
-    // 3. 处理图片选中
-    function handleFile(input) {
+    function handlePreview(input) {
         if (input.files && input.files[0]) {
-            fileToUpload = input.files[0];
+            selectedFile = input.files[0];
             const reader = new FileReader();
             reader.onload = e => {
-                document.getElementById('img-pre').src = e.target.result;
-                document.getElementById('pre-box').style.display = 'block';
-            }
-            reader.readAsDataURL(fileToUpload);
+                const img = document.getElementById('pre-img');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(selectedFile);
         }
     }
 
-    // 4. 发送动态
-    async function send() {
-        const txt = document.getElementById('p-text').value.trim();
-        if (!txt && !fileToUpload) return;
+    async function doSubmit() {
+        const text = document.getElementById('msg-in').value.trim();
+        if (!text && !selectedFile) return;
 
         try {
-            let imgUrl = "";
-            if (fileToUpload) {
-                // 上传
-                const path = `posts/${Date.now()}_${fileToUpload.name}`;
-                const res = await app.uploadFile({ cloudPath: path, filePath: fileToUpload });
-                // 换取可访问链接
+            let fileUrl = "";
+            if (selectedFile) {
+                // 回归你最开始的上传逻辑
+                const path = `posts/${Date.now()}_${selectedFile.name}`;
+                const res = await app.uploadFile({ cloudPath: path, filePath: selectedFile });
                 const link = await app.getTempFileURL({ fileList: [res.fileID] });
-                imgUrl = link.fileList[0].tempFileURL;
+                fileUrl = link.fileList[0].tempFileURL;
             }
 
             await db.collection('chat_posts').add({
-                uid: me.uid,
-                nickname: me.nickname,
-                avatar: me.avatar,
-                text: txt,
-                img: imgUrl,
+                nickname: user.nickname,
+                avatar: user.avatar,
+                text: text,
+                img: fileUrl,
                 time: new Date()
             });
 
-            // 重置
-            document.getElementById('p-text').value = '';
-            document.getElementById('pre-box').style.display = 'none';
-            fileToUpload = null;
-        } catch (e) {
-            alert("发布失败：可能是云存储未开通或数据库权限未设为 true");
-        }
+            document.getElementById('msg-in').value = '';
+            document.getElementById('pre-img').style.display = 'none';
+            selectedFile = null;
+        } catch (e) { alert("发布失败，请检查云开发存储权限"); }
     }
 
-    // 5. 加入社区
-    function doJoin() {
-        const nick = document.getElementById('my-nick').value.trim();
-        if (!nick) return alert("写个名字吧");
-        me = {
-            nickname: nick,
-            avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(nick)}`,
-            uid: app.auth().hasLoginState().user.uid
+    function saveUser() {
+        const n = document.getElementById('nick-in').value.trim();
+        if (!n) return alert("请取个昵称");
+        user = {
+            nickname: n,
+            avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(n)}`
         };
-        document.getElementById('reg-mask').style.display = 'none';
-        document.getElementById('action-bar').style.display = 'block';
+        document.getElementById('reg-modal').style.display = 'none';
+        document.getElementById('publish-ui').style.display = 'block';
+        init();
     }
-
-    init();
 </script>
 </body>
 </html>

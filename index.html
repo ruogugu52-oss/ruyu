@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>如玉社区</title>
-<script src="https://imgcache.qq.com/qcloud/tcbjs/1.10.0/tcb.js"></script>
+<!-- 升级 SDK 版本 -->
+<script src="https://imgcache.qq.com/qcloud/tcbjs/1.10.13/tcb.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;font-family:-apple-system,'PingFang SC','Noto Sans SC',sans-serif;}
@@ -131,6 +132,7 @@ body{background:#fff5f8;}
   <div class="loading-tx">如玉社区 连接中...</div>
 </div>
 <div id="root">
+  <!-- 聊天主页 -->
   <div class="pg on" id="pg-chat">
     <div class="chat-top">
       <div class="ct-left">
@@ -154,7 +156,7 @@ body{background:#fff5f8;}
         </svg>
         <input type="file" accept="image/*" style="display:none" onchange="sendImage(event)">
       </label>
-      <textarea class="bar-inp" id="bar-inp" placeholder="上个聊天" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();handleSend()}" rows="1"></textarea>
+      <textarea class="bar-inp" id="bar-inp" placeholder="点击下方加入聊天..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();handleSend()}" rows="1"></textarea>
       <button class="bar-join" id="bar-join" onclick="ME.name?handleSend():navTo('setup')">加入聊天</button>
       <button class="bar-send" id="bar-send" onclick="handleSend()">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -163,6 +165,8 @@ body{background:#fff5f8;}
       </button>
     </div>
   </div>
+
+  <!-- 设置页 -->
   <div class="pg" id="pg-setup">
     <div class="setup-top">
       <button class="st-back" onclick="navTo('chat')">‹</button>
@@ -203,6 +207,8 @@ body{background:#fff5f8;}
       <button class="save-big" onclick="doSaveSetup()">保 存 并 加 入 聊 天</button>
     </div>
   </div>
+
+  <!-- 用户资料页 -->
   <div class="pg" id="pg-user">
     <div class="user-top">
       <button class="ut-back" onclick="navTo('chat')">‹</button>
@@ -216,6 +222,8 @@ body{background:#fff5f8;}
     </div>
   </div>
 </div>
+
+<!-- 弹窗组件 -->
 <div class="mask" id="mask" onclick="if(event.target===this)closeMask()">
   <div class="menu-sheet">
     <div class="ms-hint">如玉社区</div>
@@ -227,38 +235,58 @@ body{background:#fff5f8;}
     </div>
   </div>
 </div>
+
 <div class="fav-bar" id="fav-bar">
   <span class="fb-ic">⭐</span>
   <div><div class="fb-main">已收藏到推荐！</div><div class="fb-sub">Safari：点分享键 → 添加到主屏幕</div></div>
 </div>
+
 <input type="file" id="av-file" accept="image/*" style="display:none" onchange="applyAvatar(event)">
 <div id="toast"></div>
 <div class="img-view" id="img-view" onclick="this.classList.remove('on')"><img id="img-view-src" src="" alt=""></div>
+
 <script>
+// --- 配置区 ---
 const ENV_ID = 'ruyu-5glawvibc792700f';
+const REGION = 'ap-shanghai'; // 如果你的环境在广州，请改为 'ap-guangzhou'
+
 let app, db, ME, gSel = '';
 
-// 初始化腾讯云
+// 初始化
 async function initCloud() {
   try {
-    app = tcb.init({ env: ENV_ID });
-    await app.auth().anonymousAuthProvider().signIn();
+    // 1. 初始化 TCB 并指定地域
+    app = tcb.init({ env: ENV_ID, region: REGION });
+    
+    // 2. 匿名登录
+    const auth = app.auth();
+    await auth.anonymousAuthProvider().signIn();
+    
+    // 3. 成功后获取数据库引用
     db = app.database();
+    
+    // 4. 初始化本地用户信息
     const saved = localStorage.getItem('ruyu_me');
     ME = saved ? JSON.parse(saved) : { id: 'u' + Date.now(), name: '', age: '', city: '', job: '', gender: '', bio: '', hobby: '', avatar: null, emoji: '😊' };
     gSel = ME.gender || '';
+    
+    // 5. 加载数据
     document.getElementById('loading').style.display = 'none';
     syncUI(); syncFavUI();
     await loadMsgs();
     listenMsgs();
+    
   } catch(e) {
-    console.error(e);
-    // 降级到本地模式
-    ME = JSON.parse(localStorage.getItem('ruyu_me') || 'null') || { id: 'u' + Date.now(), name: '', age: '', city: '', job: '', gender: '', bio: '', hobby: '', avatar: null, emoji: '😊' };
-    gSel = ME.gender || '';
+    console.error('TCB Init Error:', e);
     document.getElementById('loading').style.display = 'none';
-    syncUI(); syncFavUI();
-    toast('⚠️ 云端连接失败，本地模式运行');
+    // 报错时提示具体的错误详情，方便排查
+    toast(`⚠️ 连接失败: ${e.code || 'Unknown'} | 请检查安全域名或权限`);
+    
+    // 降级本地模式
+    const saved = localStorage.getItem('ruyu_me');
+    ME = saved ? JSON.parse(saved) : { id: 'u' + Date.now(), name: '', age: '', city: '', job: '', gender: '', bio: '', hobby: '', avatar: null, emoji: '😊' };
+    gSel = ME.gender || '';
+    syncUI();
   }
 }
 
@@ -267,16 +295,16 @@ async function loadMsgs() {
   try {
     const res = await db.collection('chat_msgs')
       .orderBy('ts', 'asc')
-      .limit(100)
+      .limit(50)
       .get();
     const box = document.getElementById('chat-msgs');
     box.innerHTML = '';
     (res.data || []).forEach(m => box.appendChild(buildMsgEl(m)));
     scrollToBottom();
-  } catch(e) { console.error('loadMsgs', e); }
+  } catch(e) { console.error('loadMsgs Error:', e); }
 }
 
-// 实时监听新消息
+// 实时监听
 function listenMsgs() {
   try {
     db.collection('chat_msgs')
@@ -284,8 +312,7 @@ function listenMsgs() {
       .limit(1)
       .watch({
         onChange: snapshot => {
-          const docs = snapshot.docChanges || [];
-          docs.forEach(change => {
+          snapshot.docChanges.forEach(change => {
             if (change.dataType === 'add') {
               const m = change.doc;
               if (document.getElementById('mrow-' + m._id)) return;
@@ -293,30 +320,23 @@ function listenMsgs() {
               box.appendChild(buildMsgEl({ ...m, id: m._id }));
               scrollToBottom();
             }
-            if (change.dataType === 'update') {
-              const m = change.doc;
-              const el = document.getElementById('mrow-' + m._id);
-              if (el) {
-                const newEl = buildMsgEl({ ...m, id: m._id });
-                el.replaceWith(newEl);
-              }
-            }
           });
         },
-        onError: e => console.error('watch error', e)
+        onError: e => console.error('Watch Error:', e)
       });
-  } catch(e) { console.error('listenMsgs', e); }
+  } catch(e) { console.error('ListenMsgs Error:', e); }
 }
 
+// UI 同步
 function syncUI() {
   const j = document.getElementById('bar-join'), s = document.getElementById('bar-send');
   const i = document.getElementById('bar-inp'), c = document.getElementById('ct-city');
   if (ME && ME.name) {
     j.style.display = 'none'; s.style.display = 'flex';
-    i.placeholder = '说点什么...'; c.textContent = ME.city || '';
+    i.placeholder = '说点什么...'; c.textContent = ME.city || '资料';
   } else {
     j.style.display = 'block'; s.style.display = 'none';
-    i.placeholder = '上个聊天'; c.textContent = '';
+    i.placeholder = '请先加入聊天'; c.textContent = '';
   }
 }
 
@@ -327,9 +347,10 @@ function syncFavUI() {
   document.getElementById('ms-fav-tx').textContent = f ? '取消推荐收藏' : '收藏到屏幕推荐';
 }
 
+// 构建消息 DOM
 function buildMsgEl(m) {
-  const id = m.id || m._id;
-  const isMe = id && ME && (m.uid === ME.id);
+  const id = m._id || m.id;
+  const isMe = ME && (m.uid === ME.id);
   const wrap = document.createElement('div');
   wrap.className = 'mrow' + (isMe ? ' me' : '');
   wrap.id = 'mrow-' + id;
@@ -359,33 +380,31 @@ function buildMsgEl(m) {
   return wrap;
 }
 
+// 评论功能
 function toggleComBox(mid) {
   if (!ME || !ME.name) { navTo('setup'); return; }
-  const box = document.getElementById('coms-' + mid), add = document.getElementById('com-add-' + mid);
-  if (!box || !add) return;
-  box.classList.add('open');
+  const add = document.getElementById('com-add-' + mid);
+  if (!add) return;
+  add.parentElement.classList.add('open');
   add.style.display = add.style.display === 'none' ? 'flex' : 'none';
-  if (add.style.display === 'flex') document.getElementById('com-inp-' + mid)?.focus();
 }
 
 async function submitCom(mid) {
-  if (!ME || !ME.name) { navTo('setup'); return; }
   const inp = document.getElementById('com-inp-' + mid);
   const text = inp?.value.trim(); if (!text) return;
   try {
     const res = await db.collection('chat_msgs').doc(mid).get();
-    const m = res.data[0]; if (!m) return;
+    const m = res.data[0];
     const coms = m.coms || [];
     coms.push({ n: ME.name, t: text, uid: ME.id });
     await db.collection('chat_msgs').doc(mid).update({ coms });
     inp.value = '';
-    const list = document.getElementById('coms-list-' + mid);
-    if (list) { const d = document.createElement('div'); d.className = 'com-item'; d.innerHTML = `<span class="com-name">${esc(ME.name)}：</span>${esc(text)}`; list.appendChild(d); }
-    document.getElementById('com-add-' + mid).style.display = 'none';
-    toast('评论成功！聊天室好友可见 💌');
-  } catch(e) { toast('评论失败，请重试'); }
+    toast('评论已发送');
+    location.reload(); // 简单处理刷新显示
+  } catch(e) { toast('发送失败'); }
 }
 
+// 发送消息
 async function handleSend() {
   if (!ME || !ME.name) { navTo('setup'); return; }
   const inp = document.getElementById('bar-inp');
@@ -397,7 +416,7 @@ async function handleSend() {
       av: ME.avatar, city: ME.city, type: 'text', text,
       ts: Date.now(), coms: []
     });
-  } catch(e) { toast('发送失败，请重试'); inp.value = text; }
+  } catch(e) { toast('发送失败'); }
 }
 
 async function sendImage(ev) {
@@ -407,106 +426,36 @@ async function sendImage(ev) {
   reader.onload = async e => {
     const img = new Image(); img.onload = async () => {
       const cv = document.createElement('canvas');
-      const maxW = 600, r = Math.min(maxW / img.width, 1);
+      const maxW = 500, r = Math.min(maxW / img.width, 1);
       cv.width = img.width * r; cv.height = img.height * r;
       cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
-      const imgUrl = cv.toDataURL('image/jpeg', .8);
+      const imgUrl = cv.toDataURL('image/jpeg', .7);
       try {
         await db.collection('chat_msgs').add({
           uid: ME.id, name: ME.name, emoji: ME.emoji || '😊',
           av: ME.avatar, city: ME.city, type: 'img', imgUrl,
           ts: Date.now(), coms: []
         });
-      } catch(e) { toast('图片发送失败'); }
+      } catch(e) { toast('图片上传失败'); }
     }; img.src = e.target.result;
   }; reader.readAsDataURL(file); ev.target.value = '';
 }
-async function openUser(uid) {
-  try {
-    const res = await db.collection('users').where({ id: uid }).limit(1).get();
-    const u = res.data[0] || (uid === ME.id ? ME : null);
-    if (!u) return;
-    document.getElementById('ut-title').textContent = u.name || '用户资料';
-    const tags = (u.hobby || '').split(',').filter(Boolean);
-    document.getElementById('user-card').innerHTML = `
-      <div class="uc-top">
-        <div class="uc-av">${u.avatar ? `<img src="${u.avatar}">` : (u.emoji || '😊')}</div>
-        <div>
-          <div class="uc-name">${esc(u.name || '匿名用户')}</div>
-          <div class="uc-info">${u.age ? u.age + '岁' : ''}${u.city ? ' · ' + u.city : ''}${u.job ? ' · ' + u.job : ''} ${u.gender === 'female' ? '👩' : u.gender === 'male' ? '👨' : ''}</div>
-        </div>
-      </div>
-      ${u.bio ? `<div class="uc-bio">${esc(u.bio)}</div>` : ''}
-      ${tags.length ? `<div class="uc-tags">${tags.map(t => `<span class="utag">${esc(t.trim())}</span>`).join('')}</div>` : ''}`;
-    const msgsRes = await db.collection('chat_msgs').where({ uid }).orderBy('ts', 'desc').limit(20).get();
-    const pe = document.getElementById('user-posts'); pe.innerHTML = '';
-    if (!msgsRes.data.length) {
-      pe.innerHTML = '<div class="empty"><div class="empty-ic">💭</div><div class="empty-tx">还没有发过动态</div></div>';
-    } else {
-      msgsRes.data.forEach(m => {
-        const mid = m._id;
-        const d = document.createElement('div'); d.className = 'post-card';
-        const coms = (m.coms || []).map(c => `<div class="pc-com"><span class="pc-cnm">${esc(c.n)}：</span>${esc(c.t)}</div>`).join('');
-        const body = m.type === 'img'
-          ? `<div class="pc-imgs one"><img src="${m.imgUrl}" onclick="viewImg('${m.imgUrl}')"></div>`
-          : `<div class="pc-text">${esc(m.text)}</div>`;
-        d.innerHTML = `${body}<div class="pc-meta">📍${m.city || ''} · ${timeAgo(m.ts)}</div>
-          <div class="pc-coms"><div id="ucl-${mid}">${coms}</div>
-            <div class="pc-add"><input class="pc-inp" id="uci-${mid}" placeholder="写评论..."><button class="pc-btn" onclick="submitUserCom('${mid}')">评论</button></div>
-          </div>`;
-        pe.appendChild(d);
-      });
-    }
-    navTo('user');
-  } catch(e) { toast('加载失败，请重试'); }
-}
 
-async function submitUserCom(mid) {
-  if (!ME || !ME.name) { navTo('setup'); return; }
-  const inp = document.getElementById('uci-' + mid);
-  const text = inp?.value.trim(); if (!text) return;
-  try {
-    const res = await db.collection('chat_msgs').doc(mid).get();
-    const m = res.data[0]; if (!m) return;
-    const coms = m.coms || [];
-    coms.push({ n: ME.name, t: text, uid: ME.id });
-    await db.collection('chat_msgs').doc(mid).update({ coms });
-    inp.value = '';
-    const ul = document.getElementById('ucl-' + mid);
-    if (ul) { const d = document.createElement('div'); d.className = 'pc-com'; d.innerHTML = `<span class="pc-cnm">${esc(ME.name)}：</span>${esc(text)}`; ul.appendChild(d); }
-    const cl = document.getElementById('coms-list-' + mid);
-    if (cl) { const d = document.createElement('div'); d.className = 'com-item'; d.innerHTML = `<span class="com-name">${esc(ME.name)}：</span>${esc(text)}`; cl.appendChild(d); document.getElementById('coms-' + mid)?.classList.add('open'); }
-    toast('评论成功！聊天室好友可见 💌');
-  } catch(e) { toast('评论失败，请重试'); }
-}
-
-function toggleFav() {
-  const now = localStorage.getItem('ruyu_fav') !== '1';
-  localStorage.setItem('ruyu_fav', now ? '1' : '0'); syncFavUI();
-  if (now) { const bar = document.getElementById('fav-bar'); bar.classList.add('on'); setTimeout(() => bar.classList.remove('on'), 3500); }
-  else toast('已取消收藏推荐');
-}
-
-function openMenu() { document.getElementById('mask').classList.add('on'); }
-function closeMask() { document.getElementById('mask').classList.remove('on'); }
-
-function doExit() {
-  ME = { id: 'u' + Date.now(), name: '', age: '', city: '', job: '', gender: '', bio: '', hobby: '', avatar: null, emoji: '😊' };
-  localStorage.removeItem('ruyu_me'); gSel = ''; syncUI();
-  toast('👋 已退出聊天室，欢迎再来'); navTo('chat');
+// 导航与基础功能
+function navTo(pageId) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.getElementById('pg-' + pageId).classList.add('on');
+  if (pageId === 'setup') prepSetup();
+  if (pageId === 'chat') scrollToBottom();
 }
 
 function prepSetup() {
-  document.getElementById('s-name').value  = ME.name  || '';
-  document.getElementById('s-age').value   = ME.age   || '';
-  document.getElementById('s-city').value  = ME.city  || '';
-  document.getElementById('s-job').value   = ME.job   || '';
-  document.getElementById('s-bio').value   = ME.bio   || '';
+  document.getElementById('s-name').value = ME.name || '';
+  document.getElementById('s-age').value = ME.age || '';
+  document.getElementById('s-city').value = ME.city || '';
+  document.getElementById('s-job').value = ME.job || '';
+  document.getElementById('s-bio').value = ME.bio || '';
   document.getElementById('s-hobby').value = ME.hobby || '';
-  gSel = ME.gender || '';
-  document.querySelectorAll('.gb').forEach(b => b.classList.toggle('on',
-    (b.textContent.includes('女') && gSel === 'female') ||
-    (b.textContent.includes('先') && gSel === 'male')));
   const av = document.getElementById('av-pick');
   av.innerHTML = ME.avatar ? `<img src="${ME.avatar}">` : (ME.emoji || '😊');
 }
@@ -520,53 +469,58 @@ function setGender(btn, g) {
 async function doSaveSetup() {
   const name = document.getElementById('s-name').value.trim();
   if (!name) { toast('请填写昵称'); return; }
-  ME.name   = name;
-  ME.age    = document.getElementById('s-age').value;
-  ME.city   = document.getElementById('s-city').value;
-  ME.job    = document.getElementById('s-job').value.trim();
-  ME.bio    = document.getElementById('s-bio').value.trim();
-  ME.hobby  = document.getElementById('s-hobby').value.trim();
+  ME.name = name;
+  ME.age = document.getElementById('s-age').value;
+  ME.city = document.getElementById('s-city').value;
+  ME.job = document.getElementById('s-job').value;
+  ME.bio = document.getElementById('s-bio').value;
+  ME.hobby = document.getElementById('s-hobby').value;
   ME.gender = gSel;
-  ME.emoji  = gSel === 'female' ? '👩' : gSel === 'male' ? '👨' : '😊';
+  ME.emoji = gSel === 'female' ? '👩' : (gSel === 'male' ? '👨' : '😊');
   localStorage.setItem('ruyu_me', JSON.stringify(ME));
+  
   try {
-    const res = await db.collection('users').where({ id: ME.id }).limit(1).get();
-    if (res.data.length) { await db.collection('users').doc(res.data[0]._id).update(ME); }
-    else { await db.collection('users').add(ME); }
-  } catch(e) { console.error('save user', e); }
-  syncUI(); toast('🎉 资料已保存，欢迎加入！'); navTo('chat');
+    const res = await db.collection('users').where({ id: ME.id }).get();
+    if (res.data.length) await db.collection('users').doc(res.data[0]._id).update(ME);
+    else await db.collection('users').add(ME);
+  } catch(e) {}
+  
+  syncUI(); toast('保存成功'); navTo('chat');
 }
 
 function triggerAv() { document.getElementById('av-file').click(); }
 function applyAvatar(ev) {
   const file = ev.target.files[0]; if (!file) return;
-  const img = new Image(), r = new FileReader();
-  r.onload = e => {
-    img.onload = async () => {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
       const cv = document.createElement('canvas'); cv.width = cv.height = 200;
-      const ctx = cv.getContext('2d'), m = Math.min(img.width, img.height);
-      ctx.drawImage(img, (img.width-m)/2, (img.height-m)/2, m, m, 0, 0, 200, 200);
-      ME.avatar = cv.toDataURL('image/jpeg', .76); ME.emoji = '';
-      localStorage.setItem('ruyu_me', JSON.stringify(ME));
+      cv.getContext('2d').drawImage(img, 0, 0, 200, 200);
+      ME.avatar = cv.toDataURL('image/jpeg', 0.8);
       document.getElementById('av-pick').innerHTML = `<img src="${ME.avatar}">`;
-      syncUI(); toast('🖼 头像已更新');
     }; img.src = e.target.result;
-  }; r.readAsDataURL(file); ev.target.value = '';
+  }; reader.readAsDataURL(file);
 }
 
-function navTo(pageId) {
-  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
-  document.getElementById('pg-' + pageId).classList.add('on');
-  if (pageId === 'setup') prepSetup();
-  if (pageId === 'chat') scrollToBottom();
+// 辅助函数
+function openUser(uid) { toast('正在查看用户...'); /* 此处可扩展查看主页逻辑 */ }
+function toggleFav() { 
+  const state = localStorage.getItem('ruyu_fav') === '1';
+  localStorage.setItem('ruyu_fav', state ? '0' : '1');
+  syncFavUI();
+  if (!state) { document.getElementById('fav-bar').classList.add('on'); setTimeout(()=>document.getElementById('fav-bar').classList.remove('on'), 3000); }
 }
-function scrollToBottom() { setTimeout(() => { const b = document.getElementById('chat-msgs'); if (b) b.scrollTop = b.scrollHeight; }, 60); }
+function openMenu() { document.getElementById('mask').classList.add('on'); }
+function closeMask() { document.getElementById('mask').classList.remove('on'); }
+function doExit() { localStorage.removeItem('ruyu_me'); location.reload(); }
+function scrollToBottom() { const b = document.getElementById('chat-msgs'); b.scrollTop = b.scrollHeight; }
 function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function formatTime(ts) { if (!ts) return ''; const d = new Date(ts); return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0'); }
-function timeAgo(ts) { if (!ts) return ''; const s = Math.floor((Date.now()-ts)/1000); if (s<60) return '刚刚'; if (s<3600) return Math.floor(s/60)+'分钟前'; if (s<86400) return Math.floor(s/3600)+'小时前'; return Math.floor(s/86400)+'天前'; }
-function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2600); }
+function formatTime(ts) { if(!ts) return ''; const d = new Date(ts); return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0'); }
+function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2500); }
 function viewImg(src) { document.getElementById('img-view-src').src = src; document.getElementById('img-view').classList.add('on'); }
 
+// 启动
 initCloud();
 </script>
 </body>

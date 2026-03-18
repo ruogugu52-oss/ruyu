@@ -232,7 +232,8 @@ let app,db,ME,gSel='',pollTimer=null,lastTs=0;
 
 async function initCloud(){
   try{
-    app=tcb.init({env:ENV_ID});
+    app=cloudbase.init({env:ENV_ID});
+
     const auth=app.auth({persistence:'local'});
     await auth.anonymousAuthProvider().signIn();
     db=app.database();
